@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<phpunit colors="true"
+         convertErrorsToExceptions="true"
+         convertNoticesToExceptions="true"
+         convertWarningsToExceptions="true"
+         processIsolation="false"
+         stopOnFailure="false"
+         syntaxCheck="false">
+    <testsuites>
+        <testsuite name="all">
+            <directory>./tests/</directory>
+        </testsuite>
+    </testsuites>
+</phpunit>
+
+        <!--<?xml version="1.0" encoding="UTF-8" ?>-->
+<!--<phpunit bootstrap="vendor/autoload.php" colors="true">-->
+<!--<testsuites>-->
+    <!--<testsuite name="bluetree-container">-->
+        <!--<directory>tests</directory>-->
+    <!--</testsuite>-->
+<!--</testsuites>-->
+<!--<logging>-->
+    <!--<log type="coverage-clover" target="tmp/coverage.xml"/>-->
+<!--</logging>-->
+<!--</phpunit>-->

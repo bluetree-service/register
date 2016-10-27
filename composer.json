@@ -1,0 +1,21 @@
+{
+    "name": "bluetree-service/register",
+    "description": "Basic Register pattern class",
+    "keywords": ["register"],
+    "license": "",
+    "type": "library",
+    "require": {
+        "bluetree-service/simple-log": "*.*.*",
+        "bluetree-service/event": "*.*.*"
+    },
+    "autoload": {
+        "psr-4": {
+            "": "src/"
+        }
+    },
+    "autoload-dev": {
+        "classmap": [
+            "tests"
+        ]
+    }
+}
