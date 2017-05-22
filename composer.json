@@ -2,20 +2,28 @@
     "name": "bluetree-service/register",
     "description": "Basic Register pattern class",
     "keywords": ["register"],
-    "license": "",
+    "license": "Apache-2.0",
     "type": "library",
+    "authors": [
+        {
+            "name": "Michał Adamiak",
+            "email": "chajr@bluetree.pl",
+            "homepage": "https://github.com/chajr",
+            "role": "Developer"
+        }
+    ],
     "require": {
-        "bluetree-service/simple-log": "*.*.*",
-        "bluetree-service/event": "*.*.*"
+        "php": ">=5.4.0",
+        "bluetree-service/simple-log": "v0.5.0.1",
+        "bluetree-service/event": "v0.2.*"
+    },
+    "require-dev": {
+        "satooshi/php-coveralls": "1.0.*",
+        "phpunit/phpunit": "4.8.35"
     },
     "autoload": {
         "psr-4": {
-            "Blue": "src/"
+            "BlueRegister": "src/"
         }
-    },
-    "autoload-dev": {
-        "classmap": [
-            "tests"
-        ]
     }
 }
