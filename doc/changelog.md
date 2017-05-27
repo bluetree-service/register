@@ -13,3 +13,5 @@ All notable changes to this project will be documented in this file.
 * PHP version to 5.6
 * Updated library versions
 * Updated phpunit definitions
+* Code convention changes
+* Namespaces change

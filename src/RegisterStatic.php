@@ -1,13 +1,13 @@
 <?php
 
-namespace BlueTree;
+namespace BlueRegister;
 
 class RegisterStatic
 {
     /**
      * @var null|Register
      */
-    protected static $_instance = null;
+    protected static $instance = null;
 
     /**
      * 

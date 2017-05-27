@@ -1,17 +1,17 @@
 <?php
 
-namespace BlueTree;
+namespace BlueRegister;
 
 class Register
 {
     /**
      * @var array
      */
-    protected $_config = [
+    protected $config = [
         'log' => false,
         'events' => false,
         'log_object' => 'SimpleLog\Log',
-        'event_object' => 'ClassEvent\Event\Base\EventDispatcher',
+        'event_object' => 'BlueEvent\Event\Base\EventDispatcher',
         'event_config' => [],
     ];
 
@@ -20,33 +20,38 @@ class Register
      *
      * @var array
      */
-    protected $_registeredObjects = [];
+    protected $registeredObjects = [];
 
     /**
      * 
      *
      * @var array
      */
-    protected $_singletons = [];
+    protected $singletons = [];
 
     /**
      * store list of overrides
      *
      * @var array
      */
-    protected $_overrides = [];
+    protected $overrides = [];
     
     /**
      * store information about number of created objects
      * 
      * @var array
      */
-    protected $_classCounter = [];
+    protected $classCounter = [];
 
     /**
      * @var bool
      */
-    protected $_allowOverride = false;
+    protected $allowOverride = false;
+
+    /**
+     * @var null|\BlueEvent\Event\Base\Interfaces\EventDispatcherInterface
+     */
+    protected $event = null;
 
     /**
      * create new instance of given class
@@ -58,7 +63,7 @@ class Register
      */
     public function factory($namespace, array $args = [], array $config = [])
     {
-        $this->_config = array_merge($this->_config, $config);
+        $this->config = array_merge($this->config, $config);
         $namespace = $this->checkOverrider($namespace, $config);
 
         $this->classExists($namespace, $config)
@@ -70,7 +75,7 @@ class Register
 
         if ($object) {
             $this->setClassCounter($namespace);
-            $this->_registeredObjects[$namespace] = get_class($object);
+            $this->registeredObjects[$namespace] = get_class($object);
         }
 
         $this->makeLog('');
@@ -93,8 +98,8 @@ class Register
             $name = $namespace;
         }
 
-        if (isset($this->_singletons[$name])) {
-            return $this->_singletons[$name];
+        if (isset($this->singletons[$name])) {
+            return $this->singletons[$name];
         }
 
         return $this->factory($namespace, $args, $config);
@@ -109,11 +114,11 @@ class Register
      */
     protected function checkOverrider($namespace, array $config)
     {
-        if (isset($this->_overrides[$namespace])) {
-            $namespace = $this->_overrides[$namespace]['overrider'];
+        if (isset($this->overrides[$namespace])) {
+            $namespace = $this->overrides[$namespace]['overrider'];
             $this->classExists($namespace, $config);
 
-            if (isset($this->_overrides[$namespace]['only_once'])) {
+            if (isset($this->overrides[$namespace]['only_once'])) {
                 $this->unsetOverrider($namespace);
             }
         }
@@ -130,10 +135,10 @@ class Register
     public function getConfig($key = null)
     {
         if (is_null($key)) {
-            return $this->_config; 
+            return $this->config;
         }
 
-        return $this->_config[$key];
+        return $this->config[$key];
     }
 
     /**
@@ -145,7 +150,7 @@ class Register
      */
     public function setConfig($key, $val)
     {
-        $this->_config[$key] = $val;
+        $this->config[$key] = $val;
         return $this;
     }
 
@@ -169,8 +174,10 @@ class Register
 
     protected function callEvent($name, $data, $config)
     {
-        if ($this->_config['events']) {
-
+        if ($this->config['events']) {
+            if (is_null($this->event)) {
+                $this->registerEvent();
+            }
 
             $this->makeLog('');
         }
@@ -180,9 +187,14 @@ class Register
 
     protected function registerEvent()
     {
-        //called without register
-        //in option give other namespace
-        //must be the same interface
+        $this->event = new $this->config['event_object']($this->config['event_config']);
+
+        if (!$this->event instanceof \BlueEvent\Event\Base\EventDispatcher) {
+            $this->makeLog('Event should be instance of BlueEvent\Event\Base\EventDispatcher');
+            throw new \LogicException('Event should be instance of BlueEvent\Event\Base\EventDispatcher');
+        }
+
+        return $this;
     }
 
     protected function registerLog()
@@ -194,7 +206,7 @@ class Register
 
     protected function makeLog($message)
     {
-        if ($this->_config['log']) {
+        if ($this->config['log']) {
 
         }
     }
@@ -207,8 +219,8 @@ class Register
      */
     public function destroySingleton($name)
     {
-        if (isset($this->_singletons[$name])) {
-            unset($this->_singletons[$name]);
+        if (isset($this->singletons[$name])) {
+            unset($this->singletons[$name]);
         }
 
         $this->makeLog('');
@@ -234,7 +246,7 @@ class Register
      */
     public function getRegisteredObjects()
     {
-        return $this->_registeredObjects;
+        return $this->registeredObjects;
     }
 
     /**
@@ -244,7 +256,7 @@ class Register
      */
     public function getClassCounter()
     {
-        return $this->_classCounter;
+        return $this->classCounter;
     }
 
     /**
@@ -255,7 +267,7 @@ class Register
      */
     public function setClassCounter($class)
     {
-        $this->_classCounter[$class] += 1;
+        $this->classCounter[$class] += 1;
         return $this;
     }
 
@@ -269,7 +281,7 @@ class Register
      */
     public function setOverrider($namespace, $overrider, $onlyOnce = false)
     {
-        $this->_overrides[$namespace] = [
+        $this->overrides[$namespace] = [
             'overrider' => $overrider,
             'only_once' => $onlyOnce,
         ];
@@ -288,9 +300,9 @@ class Register
     public function unsetOverrider($namespace = null)
     {
         if (is_null($namespace)) {
-            $this->_overrides = [];
+            $this->overrides = [];
         } else {
-            unset($this->_overrides[$namespace]);
+            unset($this->overrides[$namespace]);
         }
 
         $this->makeLog('');
@@ -305,7 +317,7 @@ class Register
      */
     public function enableOverride()
     {
-        $this->_allowOverride = true;
+        $this->allowOverride = true;
         return $this;
     }
 
@@ -316,7 +328,7 @@ class Register
      */
     public function disableOverride()
     {
-        $this->_allowOverride = false;
+        $this->allowOverride = false;
         return $this;
     }
 
@@ -327,6 +339,6 @@ class Register
      */
     public function isOverrideEnable()
     {
-        return $this->_allowOverride;
+        return $this->allowOverride;
     }
 }
