@@ -54,6 +54,11 @@ class Register
     protected $event = null;
 
     /**
+     * @var null|\SimpleLog\LogInterface
+     */
+    protected $log = null;
+
+    /**
      * create new instance of given class
      *
      * @param string $namespace
@@ -64,21 +69,24 @@ class Register
     public function factory($namespace, array $args = [], array $config = [])
     {
         $this->config = array_merge($this->config, $config);
-        $namespace = $this->checkOverrider($namespace, $config);
+        $namespace = $this->checkOverrider($namespace);
 
-        $this->classExists($namespace, $config)
-            ->callEvent('register_before_create', [$namespace, $args], $config);
+        $this->classExists($namespace)
+            ->callEvent('register_before_create', [$namespace, $args]);
 
         $object = call_user_func_array($namespace, $args);
 
-        $this->callEvent('register_after_create', [$object], $config);
+        $this->callEvent('register_after_create', [$object]);
 
         if ($object) {
             $this->setClassCounter($namespace);
             $this->registeredObjects[$namespace] = get_class($object);
         }
 
-        $this->makeLog('');
+        $this->makeLog([
+            'Object created: ' . $namespace . '. With args:',
+            $args
+        ]);
 
         return $object;
     }
@@ -99,6 +107,11 @@ class Register
         }
 
         if (isset($this->singletons[$name])) {
+            $this->callEvent(
+                'register_before_return_singleton',
+                [$this->singletons[$name], $args, $name]
+            );
+
             return $this->singletons[$name];
         }
 
@@ -109,14 +122,13 @@ class Register
      * check that given class should be replaced by some other
      * 
      * @param string $namespace
-     * @param array $config
      * @return string
      */
-    protected function checkOverrider($namespace, array $config)
+    protected function checkOverrider($namespace)
     {
         if (isset($this->overrides[$namespace])) {
             $namespace = $this->overrides[$namespace]['overrider'];
-            $this->classExists($namespace, $config);
+            $this->classExists($namespace);
 
             if (isset($this->overrides[$namespace]['only_once'])) {
                 $this->unsetOverrider($namespace);
@@ -158,57 +170,108 @@ class Register
      * check that class exists and throw exception if not
      *
      * @param string $namespace
-     * @param array $config
      * @return $this
      */
-    protected function classExists($namespace, array $config)
+    protected function classExists($namespace)
     {
         if (!class_exists($namespace)) {
-            $this->callEvent('register_class_dont_exists', [$namespace], $config); //??which config
+            $this->callEvent('register_class_dont_exists', [$namespace]);
 
-            throw new \InvalidArgumentException('Class don\'t exists: '  . $namespace);
+            throw new \InvalidArgumentException('Class don\'t exists: ' . $namespace);
         }
 
         return $this;
     }
 
-    protected function callEvent($name, $data, $config)
+    /**
+     * @param string $name
+     * @param array $data
+     * @return $this
+     */
+    protected function callEvent($name, array $data)
     {
-        if ($this->config['events']) {
+        if ($this->config['events'] === true) {
             if (is_null($this->event)) {
                 $this->registerEvent();
             }
 
-            $this->makeLog('');
+            $this->event->triggerEvent($name, $data + [$this->config]);
+
+            $this->makeLog('Triggered: ' . $name);
         }
 
         return $this;
     }
 
+    /**
+     * @return $this
+     */
     protected function registerEvent()
     {
-        $this->event = new $this->config['event_object']($this->config['event_config']);
+        switch (true) {
+            case $this->config['events'] === false;
+                break;
 
-        if (!$this->event instanceof \BlueEvent\Event\Base\EventDispatcher) {
-            $this->makeLog('Event should be instance of BlueEvent\Event\Base\EventDispatcher');
-            throw new \LogicException('Event should be instance of BlueEvent\Event\Base\EventDispatcher');
+            case $this->config['event_object'] instanceof \BlueEvent\Event\Base\EventDispatcher:
+                $this->event = $this->config['event_object'];
+                break;
+
+            default:
+                $this->event = new $this->config['event_object']($this->config['event_config']);
+
+                if (!$this->event instanceof \BlueEvent\Event\Base\EventDispatcher) {
+                    $this->makeLog('Event should be instance of BlueEvent\Event\Base\EventDispatcher');
+                    throw new \LogicException('Event should be instance of BlueEvent\Event\Base\EventDispatcher');
+                }
+
+                break;
         }
 
         return $this;
     }
 
+    /**
+     * @return $this
+     */
     protected function registerLog()
     {
-        //called without register
-        //in option give other namespace
-        //must be the same interface
+        switch (true) {
+            case $this->config['log'] === false;
+                break;
+
+            case $this->config['log_object'] instanceof \SimpleLog\LogInterface:
+                $this->log = $this->config['log_object'];
+                break;
+
+            default:
+                $this->log = new $this->config['log_object'];
+
+                if (!$this->event instanceof \SimpleLog\LogInterface) {
+                    $this->makeLog('Event should be instance of SimpleLog\LogInterface');
+                    throw new \LogicException('Event should be instance of SimpleLog\LogInterface');
+                }
+
+                break;
+        }
+
+        return $this;
     }
 
+    /**
+     * @param string|array $message
+     * @return $this
+     */
     protected function makeLog($message)
     {
-        if ($this->config['log']) {
+        if ($this->config['log'] === true) {
+            if (is_null($this->log)) {
+                $this->registerLog();
+            }
 
+            $this->log->makeLog($message);
         }
+
+        return $this;
     }
 
     /**
@@ -223,7 +286,7 @@ class Register
             unset($this->singletons[$name]);
         }
 
-        $this->makeLog('');
+        $this->makeLog('Destroy singleton: ' . $name);
 
         return $this;
     }
@@ -286,7 +349,7 @@ class Register
             'only_once' => $onlyOnce,
         ];
 
-        $this->makeLog('');
+        $this->makeLog('Override set for: ' . $namespace . ', to: ' . $overrider . '. Once: ' . (string)$onlyOnce);
 
         return $this;
     }
@@ -305,7 +368,7 @@ class Register
             unset($this->overrides[$namespace]);
         }
 
-        $this->makeLog('');
+        $this->makeLog('Override unset for: ' . $namespace);
 
         return $this;
     }

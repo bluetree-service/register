@@ -1,4 +1,10 @@
 <?php
 
+namespace BlueRegister\Events;
 
-//event object for register
+use BlueEvent\Event\BaseEvent;
+
+class RegisterEvent extends BaseEvent
+{
+    
+}
