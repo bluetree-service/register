@@ -25,5 +25,10 @@
         "psr-4": {
             "BlueRegister\\": "src/"
         }
+    },
+    "autoload-dev": {
+        "classmap": [
+            "test"
+        ]
     }
 }
