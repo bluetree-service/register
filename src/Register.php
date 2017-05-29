@@ -74,7 +74,8 @@ class Register
         $this->classExists($namespace)
             ->callEvent('register_before_create', [$namespace, $args]);
 
-        $object = call_user_func_array($namespace, $args);
+        $objectReflection = new \ReflectionClass($namespace);
+        $object = $objectReflection->newInstanceArgs($args);
 
         $this->callEvent('register_after_create', [$object]);
 
@@ -330,6 +331,10 @@ class Register
      */
     public function setClassCounter($class)
     {
+        if (!isset($this->classCounter[$class])) {
+            $this->classCounter[$class] = 0;
+        }
+
         $this->classCounter[$class] += 1;
         return $this;
     }
