@@ -59,23 +59,38 @@ class Register
     protected $log = null;
 
     /**
+     * Register constructor. Allow to set config on create
+     *
+     * @param array $config
+     */
+    public function __construct(array $config = [])
+    {
+        $this->config = array_merge($this->config, $config);
+
+        if ($this->config['log'] === true) {
+            $this->registerLog();
+        }
+
+        if ($this->config['events'] === true) {
+            $this->registerEvent();
+        }
+    }
+
+    /**
      * create new instance of given class
      *
      * @param string $namespace
      * @param array $args
-     * @param array $config
      * @return mixed
      */
-    public function factory($namespace, array $args = [], array $config = [])
+    public function factory($namespace, array $args = [])
     {
-        $this->config = array_merge($this->config, $config);
         $namespace = $this->checkOverrider($namespace);
 
         $this->classExists($namespace)
             ->callEvent('register_before_create', [$namespace, $args]);
 
-        $objectReflection = new \ReflectionClass($namespace);
-        $object = $objectReflection->newInstanceArgs($args);
+        $object = new $namespace(...$args);
 
         $this->callEvent('register_after_create', [$object]);
 
@@ -98,10 +113,9 @@ class Register
      * @param string $namespace
      * @param array $args
      * @param null|string $name
-     * @param array $config
      * @return mixed
      */
-    public function singletonFactory($namespace, array $args = [], $name = null, array $config = [])
+    public function singletonFactory($namespace, array $args = [], $name = null)
     {
         if (!is_null($name)) {
             $name = $namespace;
@@ -116,7 +130,7 @@ class Register
             return $this->singletons[$name];
         }
 
-        return $this->factory($namespace, $args, $config);
+        return $this->factory($namespace, $args);
     }
 
     /**
@@ -191,13 +205,8 @@ class Register
      */
     protected function callEvent($name, array $data)
     {
-        if ($this->config['events'] === true) {
-            if (is_null($this->event)) {
-                $this->registerEvent();
-            }
-
+        if (!is_null($this->event)) {
             $this->event->triggerEvent($name, $data + [$this->config]);
-
             $this->makeLog('Triggered: ' . $name);
         }
 
@@ -210,9 +219,6 @@ class Register
     protected function registerEvent()
     {
         switch (true) {
-            case $this->config['events'] === false;
-                break;
-
             case $this->config['event_object'] instanceof \BlueEvent\Event\Base\EventDispatcher:
                 $this->event = $this->config['event_object'];
                 break;
@@ -237,9 +243,6 @@ class Register
     protected function registerLog()
     {
         switch (true) {
-            case $this->config['log'] === false;
-                break;
-
             case $this->config['log_object'] instanceof \SimpleLog\LogInterface:
                 $this->log = $this->config['log_object'];
                 break;
@@ -247,7 +250,7 @@ class Register
             default:
                 $this->log = new $this->config['log_object'];
 
-                if (!$this->event instanceof \SimpleLog\LogInterface) {
+                if (!$this->log instanceof \SimpleLog\LogInterface) {
                     $this->makeLog('Event should be instance of SimpleLog\LogInterface');
                     throw new \LogicException('Event should be instance of SimpleLog\LogInterface');
                 }
@@ -264,11 +267,7 @@ class Register
      */
     protected function makeLog($message)
     {
-        if ($this->config['log'] === true) {
-            if (is_null($this->log)) {
-                $this->registerLog();
-            }
-
+        if (!is_null($this->log)) {
             $this->log->makeLog($message);
         }
 
