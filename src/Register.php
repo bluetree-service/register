@@ -219,17 +219,26 @@ class Register
     protected function registerEvent()
     {
         switch (true) {
-            case $this->config['event_object'] instanceof \BlueEvent\Event\Base\EventDispatcher:
+            case $this->config['event_object'] instanceof \BlueEvent\Event\Base\Interfaces\EventDispatcherInterface:
                 $this->event = $this->config['event_object'];
                 break;
 
-            default:
+            case is_string($this->config['event_object']) && $this->classExists($this->config['event_object']):
                 $this->event = new $this->config['event_object']($this->config['event_config']);
 
-                if (!$this->event instanceof \BlueEvent\Event\Base\EventDispatcher) {
-                    $this->makeLog('Event should be instance of BlueEvent\Event\Base\EventDispatcher');
-                    throw new \LogicException('Event should be instance of BlueEvent\Event\Base\EventDispatcher');
+                if (!$this->event instanceof \BlueEvent\Event\Base\Interfaces\EventDispatcherInterface) {
+                    $message = 'Event should be instance of BlueEvent\Event\Base\EventDispatcher: '
+                        . get_class($this->event);
+                    $this->makeLog($message);
+                    throw new \LogicException($message);
                 }
+
+                break;
+
+            default:
+                $message = 'Cannot create Event instance: ' . get_class($this->config['event_object']);
+                $this->makeLog($message);
+                throw new \LogicException($message);
 
                 break;
         }
@@ -247,14 +256,18 @@ class Register
                 $this->log = $this->config['log_object'];
                 break;
 
-            default:
+            case is_string($this->config['log_object']) && $this->classExists($this->config['log_object']):
                 $this->log = new $this->config['log_object'];
 
                 if (!$this->log instanceof \SimpleLog\LogInterface) {
-                    $this->makeLog('Event should be instance of SimpleLog\LogInterface');
-                    throw new \LogicException('Event should be instance of SimpleLog\LogInterface');
+                    $message = 'Log should be instance of SimpleLog\LogInterface: ' . get_class($this->log);
+                    throw new \LogicException($message);
                 }
 
+                break;
+
+            default:
+                throw new \LogicException( 'Cannot create Log instance: ' . get_class($this->config['log_object']));
                 break;
         }
 
