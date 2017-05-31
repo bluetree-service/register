@@ -142,11 +142,13 @@ class Register
     protected function checkOverrider($namespace)
     {
         if (isset($this->overrides[$namespace])) {
+            $oldNamespace = $namespace;
+
             $namespace = $this->overrides[$namespace]['overrider'];
             $this->classExists($namespace);
 
-            if (isset($this->overrides[$namespace]['only_once'])) {
-                $this->unsetOverrider($namespace);
+            if ($this->overrides[$oldNamespace]['only_once']) {
+                $this->unsetOverrider($oldNamespace);
             }
         }
 
@@ -363,7 +365,7 @@ class Register
     {
         $this->overrides[$namespace] = [
             'overrider' => $overrider,
-            'only_once' => $onlyOnce,
+            'only_once' => (bool)$onlyOnce,
         ];
 
         $this->makeLog('Override set for: ' . $namespace . ', to: ' . $overrider . '. Once: ' . (string)$onlyOnce);

@@ -135,4 +135,51 @@ class RegisterTest extends TestCase
 
         $this->assertEquals([1, 2], $simpleClass->constructorArgs);
     }
+
+    public function testFactoryWithOverride()
+    {
+        $register = new Register();
+
+        for ($i = 0; $i < 3; $i++) {
+            $simpleClass = $register
+                ->setOverrider('\Test\TestClass\SimpleClass', '\Test\TestClass\OverrideClass')
+                ->factory('\Test\TestClass\SimpleClass');
+
+            $this->assertEquals(2, $simpleClass->testMe());
+        }
+
+        $register->unsetOverrider('\Test\TestClass\SimpleClass');
+        $simpleClass = $register->factory('\Test\TestClass\SimpleClass');
+
+        $this->assertEquals(1, $simpleClass->testMe());
+    }
+
+    public function testFactoryWithNoneExistingOverride()
+    {
+        $this->setExpectedException(
+            'LogicException',
+            'Class don\'t exists: SomeClass'
+        );
+
+        $register = new Register();
+
+        $register->setOverrider('\Test\TestClass\SimpleClass', 'SomeClass')
+            ->factory('\Test\TestClass\SimpleClass');
+    }
+
+    public function testFactoryWithOverrideOnlyOnce()
+    {
+        $register = new Register();
+
+        $simpleClass = $register
+            ->setOverrider('\Test\TestClass\SimpleClass', '\Test\TestClass\OverrideClass', true)
+            ->factory('\Test\TestClass\SimpleClass');
+
+        $this->assertEquals(2, $simpleClass->testMe());
+
+        /** @var \Test\TestClass\SimpleClass $simpleClass */
+        $simpleClass2 = $register->factory('\Test\TestClass\SimpleClass');
+
+        $this->assertEquals(1, $simpleClass2->testMe());
+    }
 }
