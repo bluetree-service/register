@@ -343,7 +343,7 @@ class Register
      * @param string $class
      * @return Register
      */
-    public function setClassCounter($class)
+    protected function setClassCounter($class)
     {
         if (!isset($this->classCounter[$class])) {
             $this->classCounter[$class] = 0;
