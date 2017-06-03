@@ -23,7 +23,7 @@ class Register
     protected $registeredObjects = [];
 
     /**
-     * 
+     *
      *
      * @var array
      */
@@ -38,7 +38,7 @@ class Register
     
     /**
      * store information about number of created objects
-     * 
+     *
      * @var array
      */
     protected $classCounter = [];
@@ -135,7 +135,7 @@ class Register
 
     /**
      * check that given class should be replaced by some other
-     * 
+     *
      * @param string $namespace
      * @return string
      */
@@ -269,7 +269,7 @@ class Register
                 break;
 
             default:
-                throw new \LogicException( 'Cannot create Log instance: ' . get_class($this->config['log_object']));
+                throw new \LogicException('Cannot create Log instance: ' . get_class($this->config['log_object']));
                 break;
         }
 
@@ -329,7 +329,7 @@ class Register
 
     /**
      * return list of created by Loader::getClass objects and number of executions
-     * 
+     *
      * @return array
      */
     public function getClassCounter()
@@ -339,7 +339,7 @@ class Register
 
     /**
      * increment by 1 class execution
-     * 
+     *
      * @param string $class
      * @return Register
      */
