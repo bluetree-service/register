@@ -117,20 +117,20 @@ class Register
      */
     public function singletonFactory($namespace, array $args = [], $name = null)
     {
-        if (!is_null($name)) {
+        if (is_null($name)) {
             $name = $namespace;
         }
 
-        if (isset($this->singletons[$name])) {
-            $this->callEvent(
-                'register_before_return_singleton',
-                [$this->singletons[$name], $args, $name]
-            );
-
-            return $this->singletons[$name];
+        if (!isset($this->singletons[$name])) {
+            $this->singletons[$name] = $this->factory($namespace, $args);
         }
 
-        return $this->factory($namespace, $args);
+        $this->callEvent(
+            'register_before_return_singleton',
+            [$this->singletons[$name], $args, $name]
+        );
+
+        return $this->singletons[$name];
     }
 
     /**
@@ -295,8 +295,13 @@ class Register
      * @param string $name
      * @return $this
      */
-    public function destroySingleton($name)
+    public function destroySingleton($name = null)
     {
+        if (is_null($name)) {
+            $this->singletons = [];
+            return $this;
+        }
+
         if (isset($this->singletons[$name])) {
             unset($this->singletons[$name]);
         }
