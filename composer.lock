@@ -4,20 +4,20 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#composer-lock-the-lock-file",
         "This file is @generated automatically"
     ],
-    "content-hash": "6f000e94dc1ebbbabe1fb636b15c1995",
+    "content-hash": "1c67de43423a1438c85761bc6f4934d5",
     "packages": [
         {
             "name": "bluetree-service/event",
-            "version": "v0.5.0.0",
+            "version": "v0.6.0.1",
             "source": {
                 "type": "git",
                 "url": "https://github.com/bluetree-service/event.git",
-                "reference": "797843b254f8c2d0523b64d5eae1219b6e71536d"
+                "reference": "5d515ac74b3269ddb9e7a86a2e7d2f330f1a824e"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/bluetree-service/event/zipball/797843b254f8c2d0523b64d5eae1219b6e71536d",
-                "reference": "797843b254f8c2d0523b64d5eae1219b6e71536d",
+                "url": "https://api.github.com/repos/bluetree-service/event/zipball/5d515ac74b3269ddb9e7a86a2e7d2f330f1a824e",
+                "reference": "5d515ac74b3269ddb9e7a86a2e7d2f330f1a824e",
                 "shasum": ""
             },
             "require": {
@@ -55,7 +55,7 @@
                 "event",
                 "php"
             ],
-            "time": "2017-06-02T19:10:26+00:00"
+            "time": "2017-06-07T17:11:37+00:00"
         },
         {
             "name": "bluetree-service/simple-log",
