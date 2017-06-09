@@ -7,11 +7,6 @@ use BlueEvent\Event\BaseEvent;
 class RegisterException extends BaseEvent
 {
     /**
-     * @var \SimpleLog\LogInterface
-     */
-    protected $log;
-
-    /**
      * @var bool
      */
     protected static $allowKill = false;
@@ -46,8 +41,7 @@ class RegisterException extends BaseEvent
         parent::__construct($eventName, $parameters);
 
         if (self::$allowKill) {
-            $this->log->makeLog('System killed by Register Exception.');
-            throw new \RuntimeException('System killed by Register Exception.');
+            throw new \RuntimeException('System killed by Register Exception. Unknown class: ' . $parameters[0]);
         }
     }
 }
