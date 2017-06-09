@@ -2,6 +2,8 @@
 
 namespace BlueRegister;
 
+use BlueEvent\Event\Base\Interfaces\EventDispatcherInterface;
+
 class Register
 {
     /**
@@ -141,7 +143,7 @@ class Register
      */
     protected function checkOverrider($namespace)
     {
-        if (isset($this->overrides[$namespace])) {
+        if ($this->allowOverride && isset($this->overrides[$namespace])) {
             $oldNamespace = $namespace;
 
             $namespace = $this->overrides[$namespace]['overrider'];
@@ -221,15 +223,15 @@ class Register
     protected function registerEvent()
     {
         switch (true) {
-            case $this->config['event_object'] instanceof \BlueEvent\Event\Base\Interfaces\EventDispatcherInterface:
+            case $this->config['event_object'] instanceof EventDispatcherInterface:
                 $this->event = $this->config['event_object'];
                 break;
 
             case is_string($this->config['event_object']) && $this->classExists($this->config['event_object']):
                 $this->event = new $this->config['event_object']($this->config['event_config']);
 
-                if (!$this->event instanceof \BlueEvent\Event\Base\Interfaces\EventDispatcherInterface) {
-                    $message = 'Event should be instance of BlueEvent\Event\Base\EventDispatcher: '
+                if (!$this->event instanceof EventDispatcherInterface) {
+                    $message = 'Event should be instance of \BlueEvent\Event\Base\Interfaces\EventDispatcherInterface: '
                         . get_class($this->event);
                     $this->makeLog($message);
                     throw new \LogicException($message);
