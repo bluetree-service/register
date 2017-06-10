@@ -374,7 +374,9 @@ class Register
             'only_once' => (bool)$onlyOnce,
         ];
 
-        $this->makeLog('Override set for: ' . $namespace . ', to: ' . $overrider . '. Once: ' . (string)$onlyOnce);
+        $this->makeLog(
+            'Override set for: ' . $namespace . ', to: ' . $overrider . '. Once: ' . $onlyOnce ? 'true' : 'false'
+        );
 
         return $this;
     }
