@@ -301,14 +301,13 @@ class Register
     {
         if (is_null($name)) {
             $this->singletons = [];
-            return $this;
         }
 
         if (isset($this->singletons[$name])) {
             unset($this->singletons[$name]);
         }
 
-        $this->makeLog('Destroy singleton: ' . $name);
+        $this->makeLog('Destroy singleton: ' . is_null($name) ? 'all' : $name);
 
         return $this;
     }
