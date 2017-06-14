@@ -25,6 +25,9 @@ Register allow to create and load objects in some advanced way.
 ### Events Configuration
 [Events](https://github.com/bluetree-service/event/doc/events.md)
 
+### Register Log
+[Log each some behaviours](https://github.com/bluetree-service/event/doc/register_log.md)
+
 ### Errors
 [Event listeners errors](https://github.com/bluetree-service/event/doc/errors.md)
 
