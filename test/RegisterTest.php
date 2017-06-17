@@ -26,9 +26,7 @@ class RegisterTest extends TestCase
     {
         $this->logPath = dirname(__FILE__) . '/log';
 
-        if (file_exists($this->logPath . self::REGISTER_LOG_NAME)) {
-            unlink($this->logPath . self::REGISTER_LOG_NAME);
-        }
+        $this->clearLog();
     }
 
     public function testSetAndGetConfig()
