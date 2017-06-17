@@ -1,10 +1,10 @@
 # BlueRegister
 
-[![Build Status](https://travis-ci.org/bluetree-service/event.svg)](https://travis-ci.org/bluetree-service/register)
+[![Build Status](https://travis-ci.org/bluetree-service/register.svg)](https://travis-ci.org/bluetree-service/register)
 [![Latest Stable Version](https://poser.pugx.org/bluetree-service/register/v/stable.svg)](https://packagist.org/packages/bluetree-service/register)
 [![Total Downloads](https://poser.pugx.org/bluetree-service/register/downloads.svg)](https://packagist.org/packages/bluetree-service/register)
 [![License](https://poser.pugx.org/bluetree-service/register/license.svg)](https://packagist.org/packages/bluetree-service/register)
-[![Coverage Status](https://coveralls.io/repos/github/bluetree-service/event/badge.svg?branch=master)](https://coveralls.io/github/bluetree-service/register?branch=master)
+[![Coverage Status](https://coveralls.io/repos/github/bluetree-service/register/badge.svg?branch=master)](https://coveralls.io/github/bluetree-service/register?branch=master)
 [![Dependency Status](https://www.versioneye.com/user/projects/{id}/badge.svg?style=flat)](https://www.versioneye.com/user/projects/{id})
 [![Documentation Status](https://readthedocs.org/projects/register/badge/?version=latest)](https://readthedocs.org/projects/register/?badge=latest)
 [![SensioLabsInsight](https://insight.sensiolabs.com/projects/{id}/mini.png)](https://insight.sensiolabs.com/projects/{id})
