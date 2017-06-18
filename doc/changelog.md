@@ -1,6 +1,12 @@
 # Change Log
 All notable changes to this project will be documented in this file.
 
+## 0.1.0.1 - 2017-18-06
+### Changed
+* Code coverage change
+* Test config file changes
+* Some small code improvement changes
+
 ## 0.1.0.0 - 2017-17-06
 ### Added
 * This changelog
