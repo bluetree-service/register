@@ -1,6 +1,10 @@
 # Change Log
 All notable changes to this project will be documented in this file.
 
+## 0.1.0.2 - 2017-07-18
+### Changed
+* Code climate config update
+
 ## 0.1.0.1 - 2017-18-06
 ### Changed
 * Code coverage change
