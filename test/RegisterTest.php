@@ -6,13 +6,15 @@ use PHPUnit\Framework\TestCase;
 use SimpleLog\Log;
 use BlueRegister\Register;
 use BlueRegister\Events\RegisterException;
+use BlueEvent\Event\Base\EventDispatcher;
+use BlueRegister\Events\RegisterEvent;
 
 class RegisterTest extends TestCase
 {
     /**
      * name of test event log file
      */
-    const REGISTER_LOG_NAME = '/register.log';
+    const REGISTER_LOG_NAME = '/debug.log';
 
     /**
      * @var string
@@ -24,7 +26,7 @@ class RegisterTest extends TestCase
      */
     protected function setUp()
     {
-        $this->logPath = dirname(__FILE__) . '/log';
+        $this->logPath = __DIR__ . '/log';
 
         $this->clearLog();
     }
@@ -43,6 +45,16 @@ class RegisterTest extends TestCase
 
         $this->assertTrue($register->getConfig('log'));
         $this->assertTrue($register->getConfig('events'));
+        $this->assertEquals(
+            [
+                'log' => true,
+                'events' => true,
+                'log_object' => Log::class,
+                'event_object' => EventDispatcher::class,
+                'event_config' => []
+            ],
+            $register->getConfig()
+        );
 
         $register->setConfig('log', false);
         $this->assertFalse($register->getConfig('log'));
@@ -58,7 +70,7 @@ class RegisterTest extends TestCase
         new Register(
             [
                 'log' => true,
-                'log_object' => '\Test\TestClass\SimpleClass',
+                'log_object' => TestClass\SimpleClass::class,
             ]
         );
     }
@@ -99,7 +111,7 @@ class RegisterTest extends TestCase
 
         new Register([
             'events' => true,
-            'event_object' => '\Test\TestClass\SimpleClass',
+            'event_object' => TestClass\SimpleClass::class,
         ]);
     }
 
@@ -147,13 +159,13 @@ class RegisterTest extends TestCase
         $this->assertEquals($register->getRegisteredObjects(), []);
 
         /** @var \Test\TestClass\SimpleClass $simpleClass */
-        $simpleClass = $register->factory('\Test\TestClass\SimpleClass');
+        $simpleClass = $register->factory(TestClass\SimpleClass::class);
 
-        $this->assertEquals($register->getClassCounter(), ['\Test\TestClass\SimpleClass' => 1]);
+        $this->assertEquals($register->getClassCounter(), [TestClass\SimpleClass::class => 1]);
         $this->assertEquals(1, $simpleClass->testMe());
         $this->assertEquals(
             $register->getRegisteredObjects(),
-            ['\Test\TestClass\SimpleClass' => 'Test\TestClass\SimpleClass']
+            [TestClass\SimpleClass::class => TestClass\SimpleClass::class]
         );
     }
 
@@ -162,7 +174,7 @@ class RegisterTest extends TestCase
         $register = new Register();
 
         /** @var \Test\TestClass\SimpleClass $simpleClass */
-        $simpleClass = $register->factory('\Test\TestClass\SimpleClass', [1, 2]);
+        $simpleClass = $register->factory(TestClass\SimpleClass::class, [1, 2]);
 
         $this->assertEquals([1, 2], $simpleClass->constructorArgs);
     }
@@ -178,8 +190,8 @@ class RegisterTest extends TestCase
 
         $register
             ->enableOverride()
-            ->setOverrider('\Test\TestClass\SimpleClass', 'SomeClass')
-            ->factory('\Test\TestClass\SimpleClass');
+            ->setOverrider(TestClass\SimpleClass::class, 'SomeClass')
+            ->factory(TestClass\SimpleClass::class);
     }
 
     public function testFactoryWithOverrideOnlyOnce()
@@ -188,13 +200,13 @@ class RegisterTest extends TestCase
 
         $simpleClass = $register
             ->enableOverride()
-            ->setOverrider('\Test\TestClass\SimpleClass', '\Test\TestClass\OverrideClass', true)
-            ->factory('\Test\TestClass\SimpleClass');
+            ->setOverrider(TestClass\SimpleClass::class, TestClass\OverrideClass::class, true)
+            ->factory(TestClass\SimpleClass::class);
 
         $this->assertEquals(2, $simpleClass->testMe());
 
         /** @var \Test\TestClass\SimpleClass $simpleClass */
-        $simpleClass2 = $register->factory('\Test\TestClass\SimpleClass');
+        $simpleClass2 = $register->factory(TestClass\SimpleClass::class);
 
         $this->assertEquals(1, $simpleClass2->testMe());
     }
@@ -207,17 +219,17 @@ class RegisterTest extends TestCase
         $this->assertEquals($register->getRegisteredObjects(), []);
 
         /** @var \Test\TestClass\SimpleClass $simpleClass */
-        $simpleClass = $register->singletonFactory('\Test\TestClass\SimpleClass', [1, 2]);
+        $simpleClass = $register->singletonFactory(TestClass\SimpleClass::class, [1, 2]);
         $this->assertEquals([1, 2], $simpleClass->constructorArgs);
 
-        $simpleClass = $register->singletonFactory('\Test\TestClass\SimpleClass', [3, 4]);
+        $simpleClass = $register->singletonFactory(TestClass\SimpleClass::class, [3, 4]);
         $this->assertEquals([1, 2], $simpleClass->constructorArgs);
 
-        $simpleClass = $register->getSingleton('\Test\TestClass\SimpleClass');
+        $simpleClass = $register->getSingleton(TestClass\SimpleClass::class);
         $this->assertEquals([1, 2], $simpleClass->constructorArgs);
 
-        $register->destroySingleton('\Test\TestClass\SimpleClass');
-        $simpleClass = $register->getSingleton('\Test\TestClass\SimpleClass');
+        $register->destroySingleton(TestClass\SimpleClass::class);
+        $simpleClass = $register->getSingleton(TestClass\SimpleClass::class);
         $this->assertEquals([0, 0], $simpleClass->constructorArgs);
     }
 
@@ -229,7 +241,7 @@ class RegisterTest extends TestCase
         $this->assertEquals($register->getRegisteredObjects(), []);
 
         /** @var \Test\TestClass\SimpleClass $simpleClass */
-        $simpleClass = $register->singletonFactory('\Test\TestClass\SimpleClass', [1, 2], 'singleton');
+        $simpleClass = $register->singletonFactory(TestClass\SimpleClass::class, [1, 2], 'singleton');
         $this->assertEquals([1, 2], $simpleClass->constructorArgs);
 
         $simpleClass = $register->singletonFactory('singleton');
@@ -238,11 +250,11 @@ class RegisterTest extends TestCase
         $simpleClass = $register->getSingleton('singleton');
         $this->assertEquals([1, 2], $simpleClass->constructorArgs);
 
-        $simpleClass = $register->singletonFactory('\Test\TestClass\SimpleClass', [3, 4]);
+        $simpleClass = $register->singletonFactory(TestClass\SimpleClass::class, [3, 4]);
         $this->assertEquals([3, 4], $simpleClass->constructorArgs);
 
         $register->destroySingleton();
-        $simpleClass = $register->singletonFactory('\Test\TestClass\SimpleClass');
+        $simpleClass = $register->singletonFactory(TestClass\SimpleClass::class);
         $this->assertEquals([0, 0], $simpleClass->constructorArgs);
 
         $this->setExpectedException('InvalidArgumentException', 'Class don\'t exists: singleton');
@@ -258,7 +270,7 @@ class RegisterTest extends TestCase
             'event_config' => [
                 'events' => [
                     'register_before_create' => [
-                        'object' => '\BlueRegister\Events\RegisterEvent',
+                        'object' => RegisterEvent::class,
                         'listeners' => [
                             function ($event) use (&$testData) {
                                 /** @var $event \BlueRegister\Events\RegisterEvent */
@@ -267,7 +279,7 @@ class RegisterTest extends TestCase
                         ]
                     ],
                     'register_after_create' => [
-                        'object' => '\BlueRegister\Events\RegisterEvent',
+                        'object' => RegisterEvent::class,
                         'listeners' => [
                             function ($event) use (&$testData) {
                                 /** @var $event \BlueRegister\Events\RegisterEvent */
@@ -276,7 +288,7 @@ class RegisterTest extends TestCase
                         ]
                     ],
                     'register_before_return_singleton' => [
-                        'object' => '\BlueRegister\Events\RegisterEvent',
+                        'object' => RegisterEvent::class,
                         'listeners' => [
                             function ($event) use (&$testData) {
                                 /** @var $event \BlueRegister\Events\RegisterEvent */
@@ -285,7 +297,7 @@ class RegisterTest extends TestCase
                         ]
                     ],
                     'register_class_dont_exists' => [
-                        'object' => '\BlueRegister\Events\RegisterException',
+                        'object' => RegisterException::class,
                         'listeners' => [
                             function ($event) use (&$testData) {
                                 /** @var $event RegisterException */
@@ -297,23 +309,23 @@ class RegisterTest extends TestCase
             ]
         ]);
 
-        $register->factory('\Test\TestClass\SimpleClass', [1, 2]);
+        $register->factory(TestClass\SimpleClass::class, [1, 2]);
 
         $this->assertArrayHasKey('register_before_create', $testData);
         $this->assertEquals(
-            ['\Test\TestClass\SimpleClass', [1, 2]],
+            [TestClass\SimpleClass::class, [1, 2]],
             $testData['register_before_create']
         );
 
         $this->assertArrayHasKey('register_after_create', $testData);
-        $this->assertTrue($testData['register_after_create'][0] instanceof \Test\TestClass\SimpleClass);
+        $this->assertInstanceOf(\Test\TestClass\SimpleClass::class, $testData['register_after_create'][0]);
 
-        $register->singletonFactory('\Test\TestClass\SimpleClass', [1, 2]);
+        $register->singletonFactory(TestClass\SimpleClass::class, [1, 2]);
 
         $this->assertArrayHasKey('register_before_return_singleton', $testData);
-        $this->assertTrue($testData['register_before_return_singleton'][0] instanceof \Test\TestClass\SimpleClass);
+        $this->assertInstanceOf(\Test\TestClass\SimpleClass::class, $testData['register_before_return_singleton'][0]);
         $this->assertEquals([1, 2], $testData['register_before_return_singleton'][1]);
-        $this->assertEquals('\Test\TestClass\SimpleClass', $testData['register_before_return_singleton'][2]);
+        $this->assertEquals(TestClass\SimpleClass::class, $testData['register_before_return_singleton'][2]);
 
         try {
             $register->factory('SomeClass', [1, 2]);
@@ -335,7 +347,7 @@ class RegisterTest extends TestCase
             'event_config' => [
                 'events' => [
                     'register_class_dont_exists' => [
-                        'object' => '\BlueRegister\Events\RegisterException',
+                        'object' => RegisterException::class,
                         'listeners' => []
                     ],
                 ],
@@ -357,14 +369,14 @@ class RegisterTest extends TestCase
     {
         $log = new Log;
         $log->setOption('log_path', $this->logPath);
-        $log->setOption('type', 'register');
+        $log->setOption('level', 'debug');
 
         $register = new Register([
             'log' => true,
             'log_object' => $log,
         ]);
 
-        $register->factory('\Test\TestClass\SimpleClass');
+        $register->factory(TestClass\SimpleClass::class);
         $this->assertFileExists($this->logFile());
         $this->clearLog();
 
@@ -374,7 +386,7 @@ class RegisterTest extends TestCase
                     'log'          => true,
                     'log_object'   => $log,
                     'events'       => true,
-                    'event_object' => '\Test\TestClass\SimpleClass'
+                    'event_object' => TestClass\SimpleClass::class
                 ]
             );
         } catch (\LogicException $exception) {
@@ -403,7 +415,7 @@ class RegisterTest extends TestCase
                 'events'       => true,
             ]
         );
-        $register->singletonFactory('\Test\TestClass\SimpleClass');
+        $register->singletonFactory(TestClass\SimpleClass::class);
         $this->assertFileExists($this->logFile());
         $this->clearLog();
 
@@ -416,7 +428,7 @@ class RegisterTest extends TestCase
     {
         $log = new Log;
         $log->setOption('log_path', $this->logPath);
-        $log->setOption('type', 'register');
+        $log->setOption('level', 'debug');
 
         $register = new Register([
             'log' => true,
@@ -430,8 +442,8 @@ class RegisterTest extends TestCase
 
         for ($i = 0; $i < 3; $i++) {
             $simpleClass = $register
-                ->setOverrider('\Test\TestClass\SimpleClass', '\Test\TestClass\OverrideClass')
-                ->factory('\Test\TestClass\SimpleClass');
+                ->setOverrider(TestClass\SimpleClass::class, TestClass\OverrideClass::class)
+                ->factory(TestClass\SimpleClass::class);
 
             $this->assertFileExists($this->logFile());
             $this->clearLog();
@@ -441,20 +453,36 @@ class RegisterTest extends TestCase
 
         $register->disableOverride();
         $this->assertFalse($register->isOverrideEnable());
-        $simpleClass = $register->factory('\Test\TestClass\SimpleClass');
+        $simpleClass = $register->factory(TestClass\SimpleClass::class);
         $this->assertEquals(1, $simpleClass->testMe());
 
         $simpleClass = $register
             ->enableOverride()
-            ->factory('\Test\TestClass\SimpleClass');
+            ->factory(TestClass\SimpleClass::class);
         $this->assertEquals(2, $simpleClass->testMe());
 
         $simpleClass = $register
-            ->unsetOverrider('\Test\TestClass\SimpleClass')
-            ->factory('\Test\TestClass\SimpleClass');
+            ->unsetOverrider(TestClass\SimpleClass::class)
+            ->factory(TestClass\SimpleClass::class);
         $this->assertEquals(1, $simpleClass->testMe());
         $this->assertFileExists($this->logFile());
         $this->clearLog();
+    }
+
+    public function testUnsetAllOverriders()
+    {
+        $register = new Register();
+
+        $simpleClass = $register
+            ->enableOverride()
+            ->setOverrider(TestClass\SimpleClass::class, TestClass\OverrideClass::class)
+            ->factory(TestClass\SimpleClass::class);
+        $this->assertEquals(2, $simpleClass->testMe());
+
+        $simpleClass = $register
+            ->unsetOverrider()
+            ->factory(TestClass\SimpleClass::class);
+        $this->assertEquals(1, $simpleClass->testMe());
     }
 
     /**

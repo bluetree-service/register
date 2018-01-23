@@ -3,6 +3,8 @@
 namespace BlueRegister;
 
 use BlueEvent\Event\Base\Interfaces\EventDispatcherInterface;
+use BlueEvent\Event\Base\EventDispatcher;
+use SimpleLog\Log;
 
 class Register
 {
@@ -12,8 +14,8 @@ class Register
     protected $config = [
         'log' => false,
         'events' => false,
-        'log_object' => 'SimpleLog\Log',
-        'event_object' => 'BlueEvent\Event\Base\EventDispatcher',
+        'log_object' => Log::class,
+        'event_object' => EventDispatcher::class,
         'event_config' => [],
     ];
 
@@ -25,7 +27,7 @@ class Register
     protected $registeredObjects = [];
 
     /**
-     *
+     * store list of objects called as singletons
      *
      * @var array
      */
@@ -53,17 +55,19 @@ class Register
     /**
      * @var null|\BlueEvent\Event\Base\Interfaces\EventDispatcherInterface
      */
-    protected $event = null;
+    protected $event;
 
     /**
      * @var null|\SimpleLog\LogInterface
      */
-    protected $log = null;
+    protected $log;
 
     /**
      * Register constructor. Allow to set config on create
      *
      * @param array $config
+     * @throws \LogicException
+     * @throws \InvalidArgumentException
      */
     public function __construct(array $config = [])
     {
@@ -84,6 +88,7 @@ class Register
      * @param string $namespace
      * @param array $args
      * @return mixed
+     * @throws \InvalidArgumentException
      */
     public function factory($namespace, array $args = [])
     {
@@ -116,6 +121,7 @@ class Register
      * @param array $args
      * @param null|string $name
      * @return mixed
+     * @throws \InvalidArgumentException
      */
     public function singletonFactory($namespace, array $args = [], $name = null)
     {
@@ -140,6 +146,7 @@ class Register
      *
      * @param string $namespace
      * @return string
+     * @throws \InvalidArgumentException
      */
     protected function checkOverrider($namespace)
     {
@@ -190,6 +197,7 @@ class Register
      *
      * @param string $namespace
      * @return $this
+     * @throws \InvalidArgumentException
      */
     protected function classExists($namespace)
     {
@@ -219,6 +227,8 @@ class Register
 
     /**
      * @return $this
+     * @throws \LogicException
+     * @throws \InvalidArgumentException
      */
     protected function registerEvent()
     {
@@ -252,6 +262,8 @@ class Register
 
     /**
      * @return $this
+     * @throws \LogicException
+     * @throws \InvalidArgumentException
      */
     protected function registerLog()
     {
@@ -307,7 +319,7 @@ class Register
             unset($this->singletons[$name]);
         }
 
-        $this->makeLog('Destroy singleton: ' . is_null($name) ? 'all' : $name);
+        $this->makeLog('Destroy singleton: ' . (is_null($name) ? 'all' : $name));
 
         return $this;
     }
@@ -317,6 +329,7 @@ class Register
      *
      * @param string $name
      * @return mixed
+     * @throws \InvalidArgumentException
      */
     public function getSingleton($name)
     {
@@ -355,7 +368,7 @@ class Register
             $this->classCounter[$class] = 0;
         }
 
-        $this->classCounter[$class] += 1;
+        ++$this->classCounter[$class];
         return $this;
     }
 
@@ -375,7 +388,12 @@ class Register
         ];
 
         $this->makeLog(
-            'Override set for: ' . $namespace . ', to: ' . $overrider . '. Once: ' . $onlyOnce ? 'true' : 'false'
+            'Override set for: '
+            . $namespace
+            . ', to: '
+            . $overrider
+            . '. Once: '
+            . ($onlyOnce ? 'true' : 'false')
         );
 
         return $this;
