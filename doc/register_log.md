@@ -11,8 +11,7 @@ But you can implement some other libraries, which must be consistent with
 
 ## Log messages
 
-
-## Log message example
+### Log message example
 Default log has specified format, that contains such information as:
 
 1. Basic log message
@@ -30,7 +29,8 @@ Default log has specified format, that contains such information as:
 ## Extending Log class
 Format of log message can be changed by creating own Log class and inject
 new instance to event dispatcher. New class should implements `LogInterface` and
-have one public method `makeLog` that get array of parameters to log event.
+have one public method `makeLog` that get array of parameters to log event.  
+Or you can use `PSR-3` compatible method `log` and as first parameter add correct level of log message.
 
 Remember that log file is stored in `SimpleLog` default path. To change it
 set up own simple log instance and give it by configuration parameter `log_object`.  
