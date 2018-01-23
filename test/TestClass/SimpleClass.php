@@ -28,13 +28,4 @@ class SimpleClass
     {
         return 1;
     }
-
-    /**
-     * @param mixed $arg
-     * @return mixed
-     */
-    public function testMeWithArgs($arg)
-    {
-        return $arg;
-    }
 }

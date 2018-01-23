@@ -60,13 +60,12 @@ class RegisterTest extends TestCase
         $this->assertFalse($register->getConfig('log'));
     }
 
+    /**
+     * @expectedException \LogicException
+     * @expectedExceptionMessage Log should be instance of SimpleLog\LogInterface: Test\TestClass\SimpleClass
+     */
     public function testIncorrectLogObject()
     {
-        $this->setExpectedException(
-            'LogicException',
-            'Log should be instance of SimpleLog\LogInterface: Test\TestClass\SimpleClass'
-        );
-
         new Register(
             [
                 'log' => true,
@@ -75,66 +74,60 @@ class RegisterTest extends TestCase
         );
     }
 
+    /**
+     * @expectedException \LogicException
+     * @expectedExceptionMessage Class don't exists: SomeClass
+     */
     public function testIncorrectLogObjectFromNoneExistingClass()
     {
-        $this->setExpectedException(
-            'LogicException',
-            'Class don\'t exists: SomeClass'
-        );
-
         new Register([
             'log' => true,
             'log_object' => 'SomeClass',
         ]);
     }
 
+    /**
+     * @expectedException \LogicException
+     * @expectedExceptionMessage Cannot create Log instance: Test\TestClass\SimpleClass
+     */
     public function testCreateLogInstanceFromIncorrectObject()
     {
-        $this->setExpectedException(
-            'LogicException',
-            'Cannot create Log instance: Test\TestClass\SimpleClass'
-        );
-
         new Register([
             'log' => true,
             'log_object' => new \Test\TestClass\SimpleClass,
         ]);
     }
 
+    /**
+     * @expectedException \LogicException
+     * @expectedExceptionMessage Event should be instance of \BlueEvent\Event\Base\Interfaces\EventDispatcherInterface:
+     */
     public function testIncorrectEventObject()
     {
-        $this->setExpectedException(
-            'LogicException',
-            'Event should be instance of'
-            . ' \BlueEvent\Event\Base\Interfaces\EventDispatcherInterface: Test\TestClass\SimpleClass'
-        );
-
         new Register([
             'events' => true,
             'event_object' => TestClass\SimpleClass::class,
         ]);
     }
 
+    /**
+     * @expectedException \LogicException
+     * @expectedExceptionMessage Class don't exists: SomeClass
+     */
     public function testIncorrectEventObjectFromNoneExistingClass()
     {
-        $this->setExpectedException(
-            'LogicException',
-            'Class don\'t exists: SomeClass'
-        );
-
         new Register([
             'events' => true,
             'event_object' => 'SomeClass',
         ]);
     }
 
+    /**
+     * @expectedException \LogicException
+     * @expectedExceptionMessage Cannot create Event instance: Test\TestClass\SimpleClass
+     */
     public function testCreateEventInstanceFromIncorrectObject()
     {
-        $this->setExpectedException(
-            'LogicException',
-            'Cannot create Event instance: Test\TestClass\SimpleClass'
-        );
-
         new Register([
             'events' => true,
             'event_object' => new \Test\TestClass\SimpleClass,
@@ -179,13 +172,12 @@ class RegisterTest extends TestCase
         $this->assertEquals([1, 2], $simpleClass->constructorArgs);
     }
 
+    /**
+     * @expectedException \LogicException
+     * @expectedExceptionMessage Class don't exists: SomeClass
+     */
     public function testFactoryWithNoneExistingOverride()
     {
-        $this->setExpectedException(
-            'LogicException',
-            'Class don\'t exists: SomeClass'
-        );
-
         $register = new Register;
 
         $register
@@ -233,6 +225,10 @@ class RegisterTest extends TestCase
         $this->assertEquals([0, 0], $simpleClass->constructorArgs);
     }
 
+    /**
+     * @expectedException \LogicException
+     * @expectedExceptionMessage Class don't exists: singleton
+     */
     public function testSingletonFactoryWithNames()
     {
         $register = new Register();
@@ -257,7 +253,7 @@ class RegisterTest extends TestCase
         $simpleClass = $register->singletonFactory(TestClass\SimpleClass::class);
         $this->assertEquals([0, 0], $simpleClass->constructorArgs);
 
-        $this->setExpectedException('InvalidArgumentException', 'Class don\'t exists: singleton');
+        //exception
         $register->getSingleton('singleton');
     }
 
@@ -336,6 +332,10 @@ class RegisterTest extends TestCase
         $this->assertEquals('SomeClass', $testData['register_class_dont_exists'][0]);
     }
 
+    /**
+     * @expectedException \RuntimeException
+     * @expectedExceptionMessage System killed by Register Exception. Unknown class: SomeClass
+     */
     public function testSystemEventWithKill()
     {
         RegisterException::allowKill(true);
@@ -353,11 +353,6 @@ class RegisterTest extends TestCase
                 ],
             ]
         ]);
-
-        $this->setExpectedException(
-            'RuntimeException',
-            'System killed by Register Exception. Unknown class: SomeClass'
-        );
 
         try {
             $register->factory('SomeClass');
