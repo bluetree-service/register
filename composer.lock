@@ -4,24 +4,24 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#composer-lock-the-lock-file",
         "This file is @generated automatically"
     ],
-    "content-hash": "1c67de43423a1438c85761bc6f4934d5",
+    "content-hash": "875780df73026497e88867f3fd2a5a93",
     "packages": [
         {
             "name": "bluetree-service/event",
-            "version": "v0.6.0.1",
+            "version": "v0.7.0.1",
             "source": {
                 "type": "git",
                 "url": "https://github.com/bluetree-service/event.git",
-                "reference": "5d515ac74b3269ddb9e7a86a2e7d2f330f1a824e"
+                "reference": "64ef4c77af6284fc22748285d5e527edbdbed69b"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/bluetree-service/event/zipball/5d515ac74b3269ddb9e7a86a2e7d2f330f1a824e",
-                "reference": "5d515ac74b3269ddb9e7a86a2e7d2f330f1a824e",
+                "url": "https://api.github.com/repos/bluetree-service/event/zipball/64ef4c77af6284fc22748285d5e527edbdbed69b",
+                "reference": "64ef4c77af6284fc22748285d5e527edbdbed69b",
                 "shasum": ""
             },
             "require": {
-                "bluetree-service/simple-log": "v0.6.*",
+                "bluetree-service/simple-log": "v0.7.*",
                 "mustangostang/spyc": "0.6.*",
                 "php": ">=5.6.0",
                 "zendframework/zend-config": "3.1.*",
@@ -29,6 +29,7 @@
             },
             "require-dev": {
                 "phpunit/phpunit": "4.8.35",
+                "roave/security-advisories": "dev-master",
                 "satooshi/php-coveralls": "1.0.*"
             },
             "type": "library",
@@ -50,29 +51,30 @@
                 }
             ],
             "description": "Simple PHP event handling mechanism",
-            "homepage": "https://github.com/chajr/class-event",
+            "homepage": "https://github.com/bluetree-service/event",
             "keywords": [
                 "event",
                 "php"
             ],
-            "time": "2017-06-07T17:11:37+00:00"
+            "time": "2018-01-22T20:13:11+00:00"
         },
         {
             "name": "bluetree-service/simple-log",
-            "version": "v0.6.0.3",
+            "version": "v0.7.1.1",
             "source": {
                 "type": "git",
                 "url": "https://github.com/bluetree-service/simple-log.git",
-                "reference": "d20ab6bd1599a44bdd7b8c62df4ce139b17d1e07"
+                "reference": "16fb8d593610cbfc2e5606333251f0f714341790"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/bluetree-service/simple-log/zipball/d20ab6bd1599a44bdd7b8c62df4ce139b17d1e07",
-                "reference": "d20ab6bd1599a44bdd7b8c62df4ce139b17d1e07",
+                "url": "https://api.github.com/repos/bluetree-service/simple-log/zipball/16fb8d593610cbfc2e5606333251f0f714341790",
+                "reference": "16fb8d593610cbfc2e5606333251f0f714341790",
                 "shasum": ""
             },
             "require": {
-                "php": ">=5.5.0"
+                "php": ">=5.6.0",
+                "psr/log": "1.0.*"
             },
             "require-dev": {
                 "phpunit/phpunit": "4.8.35",
@@ -107,7 +109,7 @@
                 "messages",
                 "warning"
             ],
-            "time": "2017-05-27T12:17:04+00:00"
+            "time": "2018-01-21T17:14:04+00:00"
         },
         {
             "name": "mustangostang/spyc",
@@ -207,6 +209,53 @@
                 "psr"
             ],
             "time": "2017-02-14T16:28:37+00:00"
+        },
+        {
+            "name": "psr/log",
+            "version": "1.0.2",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/php-fig/log.git",
+                "reference": "4ebe3a8bf773a19edfe0a84b6585ba3d401b724d"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/php-fig/log/zipball/4ebe3a8bf773a19edfe0a84b6585ba3d401b724d",
+                "reference": "4ebe3a8bf773a19edfe0a84b6585ba3d401b724d",
+                "shasum": ""
+            },
+            "require": {
+                "php": ">=5.3.0"
+            },
+            "type": "library",
+            "extra": {
+                "branch-alias": {
+                    "dev-master": "1.0.x-dev"
+                }
+            },
+            "autoload": {
+                "psr-4": {
+                    "Psr\\Log\\": "Psr/Log/"
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "authors": [
+                {
+                    "name": "PHP-FIG",
+                    "homepage": "http://www.php-fig.org/"
+                }
+            ],
+            "description": "Common interface for logging libraries",
+            "homepage": "https://github.com/php-fig/log",
+            "keywords": [
+                "log",
+                "psr",
+                "psr-3"
+            ],
+            "time": "2016-10-10T12:19:37+00:00"
         },
         {
             "name": "zendframework/zend-config",
@@ -1099,53 +1148,6 @@
                 "xunit"
             ],
             "time": "2015-10-02T06:51:40+00:00"
-        },
-        {
-            "name": "psr/log",
-            "version": "1.0.2",
-            "source": {
-                "type": "git",
-                "url": "https://github.com/php-fig/log.git",
-                "reference": "4ebe3a8bf773a19edfe0a84b6585ba3d401b724d"
-            },
-            "dist": {
-                "type": "zip",
-                "url": "https://api.github.com/repos/php-fig/log/zipball/4ebe3a8bf773a19edfe0a84b6585ba3d401b724d",
-                "reference": "4ebe3a8bf773a19edfe0a84b6585ba3d401b724d",
-                "shasum": ""
-            },
-            "require": {
-                "php": ">=5.3.0"
-            },
-            "type": "library",
-            "extra": {
-                "branch-alias": {
-                    "dev-master": "1.0.x-dev"
-                }
-            },
-            "autoload": {
-                "psr-4": {
-                    "Psr\\Log\\": "Psr/Log/"
-                }
-            },
-            "notification-url": "https://packagist.org/downloads/",
-            "license": [
-                "MIT"
-            ],
-            "authors": [
-                {
-                    "name": "PHP-FIG",
-                    "homepage": "http://www.php-fig.org/"
-                }
-            ],
-            "description": "Common interface for logging libraries",
-            "homepage": "https://github.com/php-fig/log",
-            "keywords": [
-                "log",
-                "psr",
-                "psr-3"
-            ],
-            "time": "2016-10-10T12:19:37+00:00"
         },
         {
             "name": "satooshi/php-coveralls",

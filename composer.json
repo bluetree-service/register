@@ -14,8 +14,8 @@
     ],
     "require": {
         "php": ">=5.6.0",
-        "bluetree-service/simple-log": "v0.6.*",
-        "bluetree-service/event": "v0.6.*"
+        "bluetree-service/simple-log": "v0.7.*",
+        "bluetree-service/event": "v0.7.*"
     },
     "require-dev": {
         "satooshi/php-coveralls": "1.0.*",
