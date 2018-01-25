@@ -1,14 +1,27 @@
 # BlueRegister
 
-[![Build Status](https://travis-ci.org/bluetree-service/register.svg)](https://travis-ci.org/bluetree-service/register)
 [![Latest Stable Version](https://poser.pugx.org/bluetree-service/register/v/stable.svg)](https://packagist.org/packages/bluetree-service/register)
 [![Total Downloads](https://poser.pugx.org/bluetree-service/register/downloads.svg)](https://packagist.org/packages/bluetree-service/register)
 [![License](https://poser.pugx.org/bluetree-service/register/license.svg)](https://packagist.org/packages/bluetree-service/register)
-[![Coverage Status](https://coveralls.io/repos/github/bluetree-service/register/badge.svg?branch=master)](https://coveralls.io/github/bluetree-service/register?branch=master)
 [![Dependency Status](https://www.versioneye.com/user/projects/594527b26725bd00163ecc5a/badge.svg?style=flat-square)](https://www.versioneye.com/user/projects/594527b26725bd00163ecc5a)
 [![Documentation Status](https://readthedocs.org/projects/bluetree-serviceregister/badge/?version=latest)](http://bluetree-serviceregister.readthedocs.io/en/latest/?badge=latest)
-[![SensioLabsInsight](https://insight.sensiolabs.com/projects/06b4a644-7432-444c-ae2f-1fe61bd77831/mini.png)](https://insight.sensiolabs.com/projects/06b4a644-7432-444c-ae2f-1fe61bd77831)
-[![Code Climate](https://codeclimate.com/github/bluetree-service/register/badges/gpa.svg)](https://codeclimate.com/github/bluetree-service/register)
+
+##### Builds
+| Travis | Scrutinizer |
+|:---:|:---:|
+| [![Build Status](https://travis-ci.org/bluetree-service/register.svg)](https://travis-ci.org/bluetree-service/register) | [![Build Status](https://scrutinizer-ci.com/g/bluetree-service/register/badges/build.png?b=master)](https://scrutinizer-ci.com/g/bluetree-service/register/build-status/master) |
+
+##### Coverage
+| Coveralls | Scrutinizer |
+|:---:|:---:|
+| [![Coverage Status](https://coveralls.io/repos/github/bluetree-service/register/badge.svg?branch=master)](https://coveralls.io/github/bluetree-service/register?branch=master) | [![Code Coverage](https://scrutinizer-ci.com/g/bluetree-service/register/badges/coverage.png?b=master)](https://scrutinizer-ci.com/g/bluetree-service/register/?branch=master) |
+
+##### Quality
+| Code Climate | Scrutinizer | Sensio Labs |
+|:---:|:---:|:---:|
+| [![Code Climate](https://codeclimate.com/github/bluetree-service/register/badges/gpa.svg)](https://codeclimate.com/github/bluetree-service/register) | [![Scrutinizer Code Quality](https://scrutinizer-ci.com/g/bluetree-service/register/badges/quality-score.png?b=master)](https://scrutinizer-ci.com/g/bluetree-service/register/?branch=master) | [![SensioLabsInsight](https://insight.sensiolabs.com/projects/06b4a644-7432-444c-ae2f-1fe61bd77831/mini.png)](https://insight.sensiolabs.com/projects/06b4a644-7432-444c-ae2f-1fe61bd77831) |
+ |
+|  | [![Code Intelligence Status](https://scrutinizer-ci.com/g/bluetree-service/register/badges/code-intelligence.svg?b=master)](https://scrutinizer-ci.com/code-intelligence) |  |
 
 Register allow to create and load objects in some advanced way.
 

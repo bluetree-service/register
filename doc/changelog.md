@@ -1,6 +1,10 @@
 # Change Log
 All notable changes to this project will be documented in this file.
 
+## 0.2.0.1 - 2018-01-25
+### Added
+* Scrutinizer badges for README
+
 ## 0.2.0.0 - 2018-01-23
 ### Added
 * Scrutinizer support
