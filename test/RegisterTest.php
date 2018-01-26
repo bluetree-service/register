@@ -100,7 +100,6 @@ class RegisterTest extends TestCase
 
     /**
      * @expectedException \LogicException
-     * @expectedExceptionMessage Event should be instance of \BlueEvent\Event\Base\Interfaces\EventDispatcherInterface:
      */
     public function testIncorrectEventObject()
     {
@@ -326,6 +325,7 @@ class RegisterTest extends TestCase
         try {
             $register->factory('SomeClass', [1, 2]);
         } catch (\InvalidArgumentException $exception) {
+            $this->assertEquals('Class don\'t exists: SomeClass', $exception->getMessage());
         }
 
         $this->assertArrayHasKey('register_class_dont_exists', $testData);
@@ -357,6 +357,7 @@ class RegisterTest extends TestCase
         try {
             $register->factory('SomeClass');
         } catch (\InvalidArgumentException $exception) {
+            $this->assertEquals('Class don\'t exists: SomeClass', $exception->getMessage());
         }
     }
 
@@ -385,6 +386,9 @@ class RegisterTest extends TestCase
                 ]
             );
         } catch (\LogicException $exception) {
+            $message = 'Event should be instance of BlueEvent\Event\Base\Interfaces\EventDispatcherInterface:'
+                . ' Test\TestClass\SimpleClass';
+            $this->assertEquals($message, $exception->getMessage());
         }
         $this->assertFileExists($this->logFile());
         $this->clearLog();
@@ -399,6 +403,7 @@ class RegisterTest extends TestCase
                 ]
             );
         } catch (\LogicException $exception) {
+            $this->assertEquals('Cannot create Event instance: Test\TestClass\SimpleClass', $exception->getMessage());
         }
         $this->assertFileExists($this->logFile());
         $this->clearLog();
