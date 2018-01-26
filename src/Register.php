@@ -2,9 +2,9 @@
 
 namespace BlueRegister;
 
-use BlueEvent\Event\Base\Interfaces\EventDispatcherInterface;
+use BlueRegister\Events\Event;
 use BlueEvent\Event\Base\EventDispatcher;
-use SimpleLog\Log;
+use SimpleLog\Log as SimpleLog;
 
 class Register
 {
@@ -14,7 +14,7 @@ class Register
     protected $config = [
         'log' => false,
         'events' => false,
-        'log_object' => Log::class,
+        'log_object' => SimpleLog::class,
         'event_object' => EventDispatcher::class,
         'event_config' => [],
     ];
@@ -39,7 +39,7 @@ class Register
      * @var array
      */
     protected $overrides = [];
-    
+
     /**
      * store information about number of created objects
      *
@@ -53,12 +53,12 @@ class Register
     protected $allowOverride = false;
 
     /**
-     * @var null|\BlueEvent\Event\Base\Interfaces\EventDispatcherInterface
+     * @var null|\BlueRegister\Events\Event
      */
     protected $event;
 
     /**
-     * @var null|\SimpleLog\LogInterface
+     * @var null|\BlueRegister\Log
      */
     protected $log;
 
@@ -74,11 +74,11 @@ class Register
         $this->config = array_merge($this->config, $config);
 
         if ($this->config['log'] === true) {
-            $this->registerLog();
+            $this->log = new Log($this->config['log_object']);
         }
 
         if ($this->config['events'] === true) {
-            $this->registerEvent();
+            $this->event = new Event($this->config, $this->log);
         }
     }
 
@@ -97,14 +97,13 @@ class Register
         $this->classExists($namespace)
             ->callEvent('register_before_create', [$namespace, $args]);
 
+        //try / catch
         $object = new $namespace(...$args);
 
         $this->callEvent('register_after_create', [$object]);
 
-        if ($object) {
-            $this->setClassCounter($namespace);
-            $this->registeredObjects[$namespace] = get_class($object);
-        }
+        $this->setClassCounter($namespace);
+        $this->registeredObjects[$namespace] = get_class($object);
 
         $this->makeLog([
             'Object created: ' . $namespace . '. With args:',
@@ -218,73 +217,7 @@ class Register
     protected function callEvent($name, array $data)
     {
         if (!is_null($this->event)) {
-            $this->event->triggerEvent($name, $data + [$this->config]);
-            $this->makeLog('Triggered: ' . $name);
-        }
-
-        return $this;
-    }
-
-    /**
-     * @return $this
-     * @throws \LogicException
-     * @throws \InvalidArgumentException
-     */
-    protected function registerEvent()
-    {
-        switch (true) {
-            case $this->config['event_object'] instanceof EventDispatcherInterface:
-                $this->event = $this->config['event_object'];
-                break;
-
-            case is_string($this->config['event_object']) && $this->classExists($this->config['event_object']):
-                $this->event = new $this->config['event_object']($this->config['event_config']);
-
-                if (!$this->event instanceof EventDispatcherInterface) {
-                    $message = 'Event should be instance of \BlueEvent\Event\Base\Interfaces\EventDispatcherInterface: '
-                        . get_class($this->event);
-                    $this->makeLog($message);
-                    throw new \LogicException($message);
-                }
-
-                break;
-
-            default:
-                $message = 'Cannot create Event instance: ' . get_class($this->config['event_object']);
-                $this->makeLog($message);
-                throw new \LogicException($message);
-
-                break;
-        }
-
-        return $this;
-    }
-
-    /**
-     * @return $this
-     * @throws \LogicException
-     * @throws \InvalidArgumentException
-     */
-    protected function registerLog()
-    {
-        switch (true) {
-            case $this->config['log_object'] instanceof \SimpleLog\LogInterface:
-                $this->log = $this->config['log_object'];
-                break;
-
-            case is_string($this->config['log_object']) && $this->classExists($this->config['log_object']):
-                $this->log = new $this->config['log_object'];
-
-                if (!$this->log instanceof \SimpleLog\LogInterface) {
-                    $message = 'Log should be instance of SimpleLog\LogInterface: ' . get_class($this->log);
-                    throw new \LogicException($message);
-                }
-
-                break;
-
-            default:
-                throw new \LogicException('Cannot create Log instance: ' . get_class($this->config['log_object']));
-                break;
+            $this->event->callEvent($name, $data);
         }
 
         return $this;
