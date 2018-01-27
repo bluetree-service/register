@@ -89,6 +89,7 @@ class Register
      * @param array $args
      * @return mixed
      * @throws \InvalidArgumentException
+     * @throws RegisterException
      */
     public function factory($namespace, array $args = [])
     {
@@ -97,8 +98,11 @@ class Register
         $this->classExists($namespace)
             ->callEvent('register_before_create', [$namespace, $args]);
 
-        //try / catch
-        $object = new $namespace(...$args);
+        try {
+            $object = new $namespace(...$args);
+        } catch (\Exception $exception) {
+            throw new RegisterException($exception);
+        }
 
         $this->callEvent('register_after_create', [$object]);
 
@@ -121,6 +125,7 @@ class Register
      * @param null|string $name
      * @return mixed
      * @throws \InvalidArgumentException
+     * @throws RegisterException
      */
     public function singletonFactory($namespace, array $args = [], $name = null)
     {
@@ -263,6 +268,7 @@ class Register
      * @param string $name
      * @return mixed
      * @throws \InvalidArgumentException
+     * @throws RegisterException
      */
     public function getSingleton($name)
     {
