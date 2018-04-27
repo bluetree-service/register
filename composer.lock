@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#composer-lock-the-lock-file",
         "This file is @generated automatically"
     ],
-    "content-hash": "875780df73026497e88867f3fd2a5a93",
+    "content-hash": "d32bc0d59a2be266712358baafd55e35",
     "packages": [
         {
             "name": "bluetree-service/event",
@@ -414,6 +414,104 @@
         }
     ],
     "packages-dev": [
+        {
+            "name": "bluetree-service/clover-reporter",
+            "version": "v0.1.1.0",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/bluetree-service/clover-reporter.git",
+                "reference": "8fe16f8519f4597fff29454111878187ed9575e7"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/bluetree-service/clover-reporter/zipball/8fe16f8519f4597fff29454111878187ed9575e7",
+                "reference": "8fe16f8519f4597fff29454111878187ed9575e7",
+                "shasum": ""
+            },
+            "require": {
+                "bluetree-service/data": "0.2.*",
+                "php": ">=5.6.0",
+                "symfony/console": "3.4.*",
+                "symfony/filesystem": "3.4.*"
+            },
+            "require-dev": {
+                "phpunit/phpunit": "4.8.35",
+                "satooshi/php-coveralls": "1.0.*"
+            },
+            "bin": [
+                "bin/generate"
+            ],
+            "type": "library",
+            "autoload": {
+                "psr-4": {
+                    "CloverReporter\\": "src/"
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "Apache-2.0"
+            ],
+            "authors": [
+                {
+                    "name": "Michał Adamiak",
+                    "email": "chajr@bluetree.pl",
+                    "homepage": "https://github.com/chajr",
+                    "role": "Developer"
+                }
+            ],
+            "description": "Clover report generator.",
+            "homepage": "https://github.com/bluetree-service/clover-reporter",
+            "time": "2018-04-26T19:46:53+00:00"
+        },
+        {
+            "name": "bluetree-service/data",
+            "version": "v0.2.3.0",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/bluetree-service/data.git",
+                "reference": "b2501979edc970c1e574d09893aabb7300e344e0"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/bluetree-service/data/zipball/b2501979edc970c1e574d09893aabb7300e344e0",
+                "reference": "b2501979edc970c1e574d09893aabb7300e344e0",
+                "shasum": ""
+            },
+            "require": {
+                "php": ">=5.5.0"
+            },
+            "require-dev": {
+                "phpunit/phpunit": "4.8.35",
+                "satooshi/php-coveralls": "1.0.*"
+            },
+            "type": "library",
+            "autoload": {
+                "psr-4": {
+                    "BlueData\\": "src/"
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "Apache-2.0"
+            ],
+            "authors": [
+                {
+                    "name": "Michał Adamiak",
+                    "email": "chajr@bluetree.pl",
+                    "homepage": "https://github.com/chajr",
+                    "role": "Developer"
+                }
+            ],
+            "description": "Data storage and manipolation by container object",
+            "homepage": "https://github.com/bluetree-service/data",
+            "keywords": [
+                "bluetree",
+                "bluetree-service",
+                "data",
+                "xml"
+            ],
+            "time": "2018-04-13T14:52:49+00:00"
+        },
         {
             "name": "doctrine/instantiator",
             "version": "1.0.5",
@@ -1637,39 +1735,45 @@
         },
         {
             "name": "symfony/console",
-            "version": "v3.2.8",
+            "version": "v3.4.8",
             "source": {
                 "type": "git",
                 "url": "https://github.com/symfony/console.git",
-                "reference": "a7a17e0c6c3c4d70a211f80782e4b90ddadeaa38"
+                "reference": "d4bb70fa24d540c309d88a9d6e43fb2d339b1fbf"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/symfony/console/zipball/a7a17e0c6c3c4d70a211f80782e4b90ddadeaa38",
-                "reference": "a7a17e0c6c3c4d70a211f80782e4b90ddadeaa38",
+                "url": "https://api.github.com/repos/symfony/console/zipball/d4bb70fa24d540c309d88a9d6e43fb2d339b1fbf",
+                "reference": "d4bb70fa24d540c309d88a9d6e43fb2d339b1fbf",
                 "shasum": ""
             },
             "require": {
-                "php": ">=5.5.9",
-                "symfony/debug": "~2.8|~3.0",
+                "php": "^5.5.9|>=7.0.8",
+                "symfony/debug": "~2.8|~3.0|~4.0",
                 "symfony/polyfill-mbstring": "~1.0"
+            },
+            "conflict": {
+                "symfony/dependency-injection": "<3.4",
+                "symfony/process": "<3.3"
             },
             "require-dev": {
                 "psr/log": "~1.0",
-                "symfony/event-dispatcher": "~2.8|~3.0",
-                "symfony/filesystem": "~2.8|~3.0",
-                "symfony/process": "~2.8|~3.0"
+                "symfony/config": "~3.3|~4.0",
+                "symfony/dependency-injection": "~3.4|~4.0",
+                "symfony/event-dispatcher": "~2.8|~3.0|~4.0",
+                "symfony/lock": "~3.4|~4.0",
+                "symfony/process": "~3.3|~4.0"
             },
             "suggest": {
                 "psr/log": "For using the console logger",
                 "symfony/event-dispatcher": "",
-                "symfony/filesystem": "",
+                "symfony/lock": "",
                 "symfony/process": ""
             },
             "type": "library",
             "extra": {
                 "branch-alias": {
-                    "dev-master": "3.2-dev"
+                    "dev-master": "3.4-dev"
                 }
             },
             "autoload": {
@@ -1696,7 +1800,7 @@
             ],
             "description": "Symfony Console Component",
             "homepage": "https://symfony.com",
-            "time": "2017-04-26T01:39:17+00:00"
+            "time": "2018-04-03T05:22:50+00:00"
         },
         {
             "name": "symfony/debug",
@@ -1817,25 +1921,25 @@
         },
         {
             "name": "symfony/filesystem",
-            "version": "v3.2.8",
+            "version": "v3.4.8",
             "source": {
                 "type": "git",
                 "url": "https://github.com/symfony/filesystem.git",
-                "reference": "040651db13cf061827a460cc10f6e36a445c45b4"
+                "reference": "253a4490b528597aa14d2bf5aeded6f5e5e4a541"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/symfony/filesystem/zipball/040651db13cf061827a460cc10f6e36a445c45b4",
-                "reference": "040651db13cf061827a460cc10f6e36a445c45b4",
+                "url": "https://api.github.com/repos/symfony/filesystem/zipball/253a4490b528597aa14d2bf5aeded6f5e5e4a541",
+                "reference": "253a4490b528597aa14d2bf5aeded6f5e5e4a541",
                 "shasum": ""
             },
             "require": {
-                "php": ">=5.5.9"
+                "php": "^5.5.9|>=7.0.8"
             },
             "type": "library",
             "extra": {
                 "branch-alias": {
-                    "dev-master": "3.2-dev"
+                    "dev-master": "3.4-dev"
                 }
             },
             "autoload": {
@@ -1862,7 +1966,7 @@
             ],
             "description": "Symfony Filesystem Component",
             "homepage": "https://symfony.com",
-            "time": "2017-04-12T14:13:17+00:00"
+            "time": "2018-02-22T10:48:49+00:00"
         },
         {
             "name": "symfony/polyfill-mbstring",
