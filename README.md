@@ -20,7 +20,6 @@
 | Code Climate | Scrutinizer | Sensio Labs |
 |:---:|:---:|:---:|
 | [![Code Climate](https://codeclimate.com/github/bluetree-service/register/badges/gpa.svg)](https://codeclimate.com/github/bluetree-service/register) | [![Scrutinizer Code Quality](https://scrutinizer-ci.com/g/bluetree-service/register/badges/quality-score.png?b=master)](https://scrutinizer-ci.com/g/bluetree-service/register/?branch=master) | [![SensioLabsInsight](https://insight.sensiolabs.com/projects/06b4a644-7432-444c-ae2f-1fe61bd77831/mini.png)](https://insight.sensiolabs.com/projects/06b4a644-7432-444c-ae2f-1fe61bd77831) |
- |
 |  | [![Code Intelligence Status](https://scrutinizer-ci.com/g/bluetree-service/register/badges/code-intelligence.svg?b=master)](https://scrutinizer-ci.com/code-intelligence) |  |
 
 Register allow to create and load objects in some advanced way.
@@ -28,7 +27,9 @@ Register allow to create and load objects in some advanced way.
 ### Included classes
 * **BlueRegister\Events\RegisterEvent** - Basic event object for Register Events
 * **BlueRegister\Events\RegisterException** - Basic event for Register Exception events (allow to kill system by special exception)
+* **BlueRegister\Events\Event** - Register event system handling
 * **BlueRegister\Register** - Main library class, allow to create object instances and singletons
+* **BlueRegister\Log** - Register log system handling
 
 ## Documentation
 
