@@ -14,9 +14,15 @@ class SimpleClass
      *
      * @param int $arg1
      * @param int $arg2
+     * @param bool $exception
+     * @throws \LogicException
      */
-    public function __construct($arg1 = 0, $arg2 = 0)
+    public function __construct($arg1 = 0, $arg2 = 0, $exception = false)
     {
+        if ($exception) {
+            throw new \LogicException('Test exception.');
+        }
+
         $this->constructorArgs[] = $arg1;
         $this->constructorArgs[] = $arg2;
     }

@@ -143,6 +143,20 @@ class RegisterTest extends TestCase
         ]);
     }
 
+    /**
+     * @expectedException \BlueRegister\RegisterException
+     * @expectedExceptionMessage Test exception.
+     */
+    public function testFactoryWithException()
+    {
+        $register = new Register;
+
+        $this->assertEquals($register->getClassCounter(), []);
+        $this->assertEquals($register->getRegisteredObjects(), []);
+
+        $register->factory(TestClass\SimpleClass::class, [0, 0, true]);
+    }
+
     public function testFactoryForSimpleObject()
     {
         $register = new Register;
