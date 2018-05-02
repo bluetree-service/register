@@ -33,5 +33,12 @@
         "classmap": [
             "test"
         ]
+    },
+    "scripts": {
+        "test": "phpunit --coverage-clover build/logs/clover.xml",
+        "test-cover": [
+            "@test",
+            "./vendor/bin/clover_reporter -s --ansi"
+        ]
     }
 }

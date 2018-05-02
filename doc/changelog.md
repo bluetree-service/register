@@ -1,6 +1,15 @@
 # Change Log
 All notable changes to this project will be documented in this file.
 
+## 0.3.0.0 - 2018-05-02
+### Added
+* Added some tests
+* Added RegisterException when unable to create object
+* clover-reporter and composer scripts to show coverage directly after tests
+* PHP 7.2 added to build
+### Changed
+* Register refactor, some parts moved into separate classes
+
 ## 0.2.0.1 - 2018-01-25
 ### Added
 * Scrutinizer badges for README

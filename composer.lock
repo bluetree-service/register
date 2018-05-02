@@ -1,7 +1,7 @@
 {
     "_readme": [
         "This file locks the dependencies of your project to a known state",
-        "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#composer-lock-the-lock-file",
+        "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
     "content-hash": "d32bc0d59a2be266712358baafd55e35",
@@ -416,16 +416,16 @@
     "packages-dev": [
         {
             "name": "bluetree-service/clover-reporter",
-            "version": "v0.1.1.0",
+            "version": "v0.1.2.1",
             "source": {
                 "type": "git",
                 "url": "https://github.com/bluetree-service/clover-reporter.git",
-                "reference": "8fe16f8519f4597fff29454111878187ed9575e7"
+                "reference": "1a6f1501cf342a2988fee115e69d2ab7262e28ce"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/bluetree-service/clover-reporter/zipball/8fe16f8519f4597fff29454111878187ed9575e7",
-                "reference": "8fe16f8519f4597fff29454111878187ed9575e7",
+                "url": "https://api.github.com/repos/bluetree-service/clover-reporter/zipball/1a6f1501cf342a2988fee115e69d2ab7262e28ce",
+                "reference": "1a6f1501cf342a2988fee115e69d2ab7262e28ce",
                 "shasum": ""
             },
             "require": {
@@ -439,7 +439,7 @@
                 "satooshi/php-coveralls": "1.0.*"
             },
             "bin": [
-                "bin/generate"
+                "bin/clover_reporter"
             ],
             "type": "library",
             "autoload": {
@@ -461,7 +461,7 @@
             ],
             "description": "Clover report generator.",
             "homepage": "https://github.com/bluetree-service/clover-reporter",
-            "time": "2018-04-26T19:46:53+00:00"
+            "time": "2018-04-30T12:33:07+00:00"
         },
         {
             "name": "bluetree-service/data",

@@ -29,6 +29,7 @@ Register allow to create and load objects in some advanced way.
 * **BlueRegister\Events\RegisterException** - Basic event for Register Exception events (allow to kill system by special exception)
 * **BlueRegister\Events\Event** - Register event system handling
 * **BlueRegister\Register** - Main library class, allow to create object instances and singletons
+* **BlueRegister\RegisterException** - Throw only when unable to create new object
 * **BlueRegister\Log** - Register log system handling
 
 ## Documentation
@@ -68,7 +69,7 @@ libraries paste into `composer.json`:
 
 ### Requirements
 
-* PHP 5.5 or higher
+* PHP 5.6 or higher
 
 
 ## Change log
