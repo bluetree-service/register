@@ -37,25 +37,47 @@ class Event
                 $this->event = $config['event_object'];
                 break;
 
-            case is_string($config['event_object']) && $this->classExists($config['event_object']):
-                $this->event = new $config['event_object']($config['event_config']);
-
-                if (!$this->event instanceof EventDispatcherInterface) {
-                    $message = 'Event should be instance of ' . EventDispatcherInterface::class . ': '
-                        . get_class($this->event);
-                    $this->makeLog($message);
-                    throw new \LogicException($message);
-                }
-
+            case is_string($config['event_object']):
+                $this->classExists($config['event_object'])
+                    ->createObjectFromString($config);
                 break;
 
             default:
-                $message = 'Cannot create Event instance: ' . get_class($config['event_object']);
-                $this->makeLog($message);
-                throw new \LogicException($message);
-
-                break;
+                $this->eventObjectException($config['event_object']);
         }
+    }
+
+    /**
+     * @param array $config
+     * @throws \LogicException
+     */
+    protected function createObjectFromString(array $config)
+    {
+        $this->event = new $config['event_object']($config['event_config']);
+
+        if (!$this->event instanceof EventDispatcherInterface) {
+            $message = 'Event should be instance of ' . EventDispatcherInterface::class . ': '
+                . get_class($this->event);
+            $this->makeLog($message);
+            throw new \LogicException($message);
+        }
+    }
+
+    /**
+     * @param string|object $eventObject
+     * @throws \LogicException
+     */
+    protected function eventObjectException($eventObject)
+    {
+        $object = 'unknown type';
+
+        if (is_object($eventObject)) {
+            $object = get_class($eventObject);
+        }
+
+        $message = 'Cannot create Event instance: ' . $object;
+        $this->makeLog($message);
+        throw new \LogicException($message);
     }
 
     /**
