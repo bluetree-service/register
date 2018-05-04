@@ -1,6 +1,13 @@
 # Change Log
 All notable changes to this project will be documented in this file.
 
+## 0.3.1.0 - 2018-05-04
+### Added
+* Log & Event tests
+* White and black list for phpunit
+### Changed
+* Log & Event refactor
+
 ## 0.3.0.0 - 2018-05-02
 ### Added
 * Added some tests
