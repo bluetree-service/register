@@ -21,12 +21,15 @@ class EventTest extends TestCase
      */
     public function testIncorrectEventObject()
     {
+        $logPath = __DIR__ . '/log';
+        $this->clearLog($logPath);
+
         new Event(
             [
                 'event_object' => TestClass\SimpleClass::class,
                 'event_config' => [],
             ],
-            new Log(new SimpleLog)
+            $this->createLogObject()
         );
     }
 
@@ -36,12 +39,15 @@ class EventTest extends TestCase
      */
     public function testIncorrectEventObjectFromNoneExistingClass()
     {
+        $logPath = __DIR__ . '/log';
+        $this->clearLog($logPath);
+
         new Event(
             [
                 'event_object' => 'SomeClass',
                 'event_config' => [],
             ],
-            new Log(new SimpleLog)
+            $this->createLogObject()
         );
     }
 
@@ -51,41 +57,47 @@ class EventTest extends TestCase
      */
     public function testCreateEventInstanceFromIncorrectObject()
     {
+        $logPath = __DIR__ . '/log';
+        $this->clearLog($logPath);
+
         new Event(
             [
                 'event_object' => new \Test\TestClass\SimpleClass,
                 'event_config' => [],
             ],
-            new Log(new SimpleLog)
+            $this->createLogObject()
         );
     }
 
-    //test create event object
     public function testCreateEventObject()
     {
+        $logPath = __DIR__ . '/log';
+        $this->clearLog($logPath);
+        $log = $this->createLogObject();
+
         $event1 = new Event(
             [
                 'event_object' => new EventDispatcher(),
                 'event_config' => [],
             ],
-            new Log(new SimpleLog)
+            $log
         );
         $event2 = new Event(
             [
                 'event_object' => EventDispatcher::class,
                 'event_config' => [],
             ],
-            new Log(new SimpleLog)
+            $log
         );
 
         $this->assertInstanceOf(Event::class, $event1);
         $this->assertInstanceOf(Event::class, $event2);
+        $this->clearLog($logPath);
     }
-    
-
 
     public function testCallEvent()
     {
+        $logPath = __DIR__ . '/log';
         $testData = [];
         $eventConfig = [
             'register_before_create' => [
@@ -99,12 +111,14 @@ class EventTest extends TestCase
             ]
         ];
 
+        $log = $this->createLogObject();
+
         $event = new Event(
             [
                 'event_object' => new EventDispatcher(['events' => $eventConfig]),
                 'event_config' => [],
             ],
-            new Log(new SimpleLog)
+            $log
         );
 
         $this->assertEmpty($testData);
@@ -112,6 +126,8 @@ class EventTest extends TestCase
 
         $this->assertNotEmpty($testData);
         $this->assertInstanceOf(EventDispatcher::class, $testData['register_before_create'][0]['event_object']);
+
+        $this->clearLog($logPath);
     }
 
     public function testCallEventWithLog()
@@ -126,11 +142,7 @@ class EventTest extends TestCase
 
         $this->clearLog($logPath);
 
-        $simpleLog = new SimpleLog;
-        $simpleLog->setOption('log_path', $logPath)
-            ->setOption('level', 'debug');
-
-        $log = new Log($simpleLog);
+        $log = $this->createLogObject();
 
         $event = new Event(
             [
@@ -155,5 +167,19 @@ class EventTest extends TestCase
         if (file_exists($logFile)) {
             unlink($logFile);
         }
+    }
+
+    /**
+     * @return Log
+     */
+    protected function createLogObject()
+    {
+        $logPath = __DIR__ . '/log';
+
+        $simpleLog = new SimpleLog;
+        $simpleLog->setOption('log_path', $logPath)
+            ->setOption('level', 'debug');
+
+        return new Log($simpleLog);
     }
 }
