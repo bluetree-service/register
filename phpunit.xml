@@ -1,6 +1,12 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 <phpunit bootstrap="vendor/autoload.php" colors="true">
     <testsuites>
+        <testsuite name="log">
+            <file>test/LogTest.php</file>
+        </testsuite>
+        <testsuite name="event">
+            <file>test/Events/EventTest.php</file>
+        </testsuite>
         <testsuite name="register">
             <file>test/RegisterTest.php</file>
         </testsuite>
