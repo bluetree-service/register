@@ -135,12 +135,14 @@ class RegisterTest extends TestCase
 
     public function testInitRegisterWithGivenObjects()
     {
-        new Register([
+        $register = new Register([
             'events' => true,
             'event_object' => new \BlueEvent\Event\Base\EventDispatcher,
             'log' => true,
             'log_object' => new \SimpleLog\Log,
         ]);
+
+        $this->assertInstanceOf(Register::class, $register);
     }
 
     /**

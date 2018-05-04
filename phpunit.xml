@@ -11,4 +11,12 @@
             <file>test/RegisterTest.php</file>
         </testsuite>
     </testsuites>
+    <filter>
+        <whitelist processUncoveredFilesFromWhitelist="true">
+            <directory suffix=".php">src</directory>
+        </whitelist>
+        <blacklist>
+            <directory suffix=".php">test/TestClass</directory>
+        </blacklist>
+    </filter>
 </phpunit>
