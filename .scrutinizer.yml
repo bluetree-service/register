@@ -9,3 +9,6 @@ build:
                 coverage:
                     file: 'build/logs/clover.xml'
                     format: 'clover'
+filter:
+    excluded_paths:
+        - test/*
