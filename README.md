@@ -7,9 +7,9 @@
 [![Documentation Status](https://readthedocs.org/projects/bluetree-serviceregister/badge/?version=latest)](http://bluetree-serviceregister.readthedocs.io/en/latest/?badge=latest)
 
 ##### Builds
-| Travis | Scrutinizer |
-|:---:|:---:|
-| [![Build Status](https://travis-ci.org/bluetree-service/register.svg)](https://travis-ci.org/bluetree-service/register) | [![Build Status](https://scrutinizer-ci.com/g/bluetree-service/register/badges/build.png?b=master)](https://scrutinizer-ci.com/g/bluetree-service/register/build-status/master) |
+|                                                                        Travis                                                                        | Scrutinizer |
+|:----------------------------------------------------------------------------------------------------------------------------------------------------:|:---:|
+| [![Build Status](https://app.travis-ci.com/bluetree-service/register.svg?branch=master)](https://app.travis-ci.com/github/bluetree-service/register) | [![Build Status](https://scrutinizer-ci.com/g/bluetree-service/register/badges/build.png?b=master)](https://scrutinizer-ci.com/g/bluetree-service/register/build-status/master) |
 
 ##### Coverage
 | Coveralls | Scrutinizer |
@@ -17,10 +17,10 @@
 | [![Coverage Status](https://coveralls.io/repos/github/bluetree-service/register/badge.svg?branch=master)](https://coveralls.io/github/bluetree-service/register?branch=master) | [![Code Coverage](https://scrutinizer-ci.com/g/bluetree-service/register/badges/coverage.png?b=master)](https://scrutinizer-ci.com/g/bluetree-service/register/?branch=master) |
 
 ##### Quality
-| Code Climate | Scrutinizer | Sensio Labs |
-|:---:|:---:|:---:|
-| [![Code Climate](https://codeclimate.com/github/bluetree-service/register/badges/gpa.svg)](https://codeclimate.com/github/bluetree-service/register) | [![Scrutinizer Code Quality](https://scrutinizer-ci.com/g/bluetree-service/register/badges/quality-score.png?b=master)](https://scrutinizer-ci.com/g/bluetree-service/register/?branch=master) | [![SensioLabsInsight](https://insight.sensiolabs.com/projects/06b4a644-7432-444c-ae2f-1fe61bd77831/mini.png)](https://insight.sensiolabs.com/projects/06b4a644-7432-444c-ae2f-1fe61bd77831) |
-|  | [![Code Intelligence Status](https://scrutinizer-ci.com/g/bluetree-service/register/badges/code-intelligence.svg?b=master)](https://scrutinizer-ci.com/code-intelligence) |  |
+| Code Climate | Scrutinizer |                                                                                  SymfonyInsight                                                                                   |
+|:---:|:---:|:---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------:|
+| [![Code Climate](https://codeclimate.com/github/bluetree-service/register/badges/gpa.svg)](https://codeclimate.com/github/bluetree-service/register) | [![Scrutinizer Code Quality](https://scrutinizer-ci.com/g/bluetree-service/register/badges/quality-score.png?b=master)](https://scrutinizer-ci.com/g/bluetree-service/register/?branch=master) |                  [![SymfonyInsight](https://insight.symfony.com/projects/28a09e44-3a12-473e-9ab6-c30bb715008a/mini.svg)](https://insight.symfony.com/projects/28a09e44-3a12-473e-9ab6-c30bb715008a)                   |
+|  | [![Code Intelligence Status](https://scrutinizer-ci.com/g/bluetree-service/register/badges/code-intelligence.svg?b=master)](https://scrutinizer-ci.com/code-intelligence) |                                                                                                                                                                                   |
 
 Register allow to create and load objects in some advanced way.
 
@@ -69,7 +69,7 @@ libraries paste into `composer.json`:
 
 ### Requirements
 
-* PHP 5.6 or higher
+* PHP 7.3 or higher
 
 
 ## Change log

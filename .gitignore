@@ -1,3 +1,4 @@
 vendor
 test/log/notice.log
 build
+composer.lock

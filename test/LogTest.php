@@ -5,6 +5,7 @@ namespace Test;
 use PHPUnit\Framework\TestCase;
 use SimpleLog\Log as SimpleLog;
 use BlueRegister\Log;
+use Test\TestClass;
 
 class LogTest extends TestCase
 {
@@ -21,37 +22,34 @@ class LogTest extends TestCase
     /**
      * actions launched before test starts
      */
-    protected function setUp()
+    protected function setUp(): void
     {
         $this->logPath = __DIR__ . '/log';
 
         $this->clearLog();
     }
 
-    /**
-     * @expectedException \LogicException
-     * @expectedExceptionMessage Log should be instance of SimpleLog\LogInterface: Test\TestClass\SimpleClass
-     */
     public function testIncorrectLogObject()
     {
+        $this->expectExceptionMessage("Log should be instance of SimpleLog\LogInterface: Test\TestClass\SimpleClass");
+        $this->expectException(\LogicException::class);
+
         new Log(TestClass\SimpleClass::class);
     }
 
-    /**
-     * @expectedException \LogicException
-     * @expectedExceptionMessage Class don't exists: SomeClass
-     */
     public function testIncorrectLogObjectFromNoneExistingClass()
     {
+        $this->expectExceptionMessage("Class don't exists: SomeClass");
+        $this->expectException(\LogicException::class);
+
         new Log('SomeClass');
     }
 
-    /**
-     * @expectedException \LogicException
-     * @expectedExceptionMessage Cannot create Log instance: Test\TestClass\SimpleClass
-     */
     public function testCreateLogInstanceFromIncorrectObject()
     {
+        $this->expectExceptionMessage("Cannot create Log instance: Test\TestClass\SimpleClass");
+        $this->expectException(\LogicException::class);
+
         new Log(new \Test\TestClass\SimpleClass);
     }
 
@@ -96,7 +94,7 @@ class LogTest extends TestCase
     /**
      * actions launched after test was finished
      */
-    protected function tearDown()
+    protected function tearDown(): void
     {
         $this->clearLog();
     }

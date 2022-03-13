@@ -1,6 +1,17 @@
 # Change Log
 All notable changes to this project will be documented in this file.
 
+## 0.4.0.0 - 2022-03-13
+### Added
+* PHP 7.3, 7.4, 8.0 & 8.1 support
+* Type declarations
+### Removed
+* PHP 5.6, 7.0, 7.1, 7.2 support
+* composer.lock from repository
+### Changed
+* Some required libraries version
+* Some minor changes in code style
+
 ## 0.3.1.1 - 2018-07-01
 ### Added
 * Test directory to scrutinizer exclude

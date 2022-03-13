@@ -16,11 +16,10 @@ class EventTest extends TestCase
      */
     const REGISTER_LOG_NAME = '/debug.log';
 
-    /**
-     * @expectedException \LogicException
-     */
     public function testIncorrectEventObject()
     {
+        $this->expectException(\LogicException::class);
+
         $logPath = __DIR__ . '/log';
         $this->clearLog($logPath);
 
@@ -33,12 +32,11 @@ class EventTest extends TestCase
         );
     }
 
-    /**
-     * @expectedException \LogicException
-     * @expectedExceptionMessage Class don't exists: SomeClass
-     */
     public function testIncorrectEventObjectFromNoneExistingClass()
     {
+        $this->expectExceptionMessage("Class don't exists: SomeClass");
+        $this->expectException(\LogicException::class);
+
         $logPath = __DIR__ . '/log';
         $this->clearLog($logPath);
 
@@ -51,12 +49,11 @@ class EventTest extends TestCase
         );
     }
 
-    /**
-     * @expectedException \LogicException
-     * @expectedExceptionMessage Cannot create Event instance: Test\TestClass\SimpleClass
-     */
     public function testCreateEventInstanceFromIncorrectObject()
     {
+        $this->expectExceptionMessage("Cannot create Event instance: Test\TestClass\SimpleClass");
+        $this->expectException(\LogicException::class);
+
         $logPath = __DIR__ . '/log';
         $this->clearLog($logPath);
 
@@ -152,7 +149,7 @@ class EventTest extends TestCase
             $log
         );
 
-        $this->assertFileNotExists($logPath . self::REGISTER_LOG_NAME);
+        $this->assertFileDoesNotExist($logPath . self::REGISTER_LOG_NAME);
 
         $event->callEvent('register_before_create', []);
 
