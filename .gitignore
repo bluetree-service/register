@@ -2,3 +2,4 @@ vendor
 test/log/notice.log
 build
 composer.lock
+.phpunit.result.cache
