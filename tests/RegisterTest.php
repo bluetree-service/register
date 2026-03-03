@@ -1,13 +1,14 @@
 <?php
 
-namespace Test;
+namespace tests;
 
-use PHPUnit\Framework\TestCase;
-use SimpleLog\Log;
-use BlueRegister\Register;
-use BlueRegister\Events\RegisterException;
 use BlueEvent\Event\Base\EventDispatcher;
 use BlueRegister\Events\RegisterEvent;
+use BlueRegister\Events\RegisterException;
+use BlueRegister\Register;
+use PHPUnit\Framework\TestCase;
+use SimpleLog\Log;
+use Test\TestClass;
 
 class RegisterTest extends TestCase
 {
@@ -144,17 +145,17 @@ class RegisterTest extends TestCase
         $this->expectExceptionMessage("Test exception.");
         $this->expectException(\BlueRegister\RegisterException::class);
 
-        $register = new Register;
+        $register = new Register();
 
-        $this->assertEquals($register->getClassCounter(), []);
-        $this->assertEquals($register->getRegisteredObjects(), []);
+        $this->assertEquals([], $register->getClassCounter());
+        $this->assertEquals([], $register->getRegisteredObjects());
 
         $register->factory(TestClass\SimpleClass::class, [0, 0, true]);
     }
 
     public function testFactoryForSimpleObject()
     {
-        $register = new Register;
+        $register = new Register();
 
         $this->assertEquals($register->getClassCounter(), []);
         $this->assertEquals($register->getRegisteredObjects(), []);

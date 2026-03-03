@@ -1,33 +1,36 @@
 <?php
 
+declare(strict_types=1);
+
 namespace BlueRegister\Events;
 
 use BlueEvent\Event\Base\Interfaces\EventDispatcherInterface;
+use BlueRegister\Log;
 
 class Event
 {
     /**
-     * @var \BlueEvent\Event\Base\Interfaces\EventDispatcherInterface
+     * @var EventDispatcherInterface
      */
-    protected $event;
+    protected EventDispatcherInterface $event;
 
     /**
-     * @var null|\BlueRegister\Log
+     * @var null|Log
      */
-    protected $log;
+    protected ?Log $log;
 
     /**
      * @var array
      */
-    protected $config = [];
+    protected array $config = [];
 
     /**
      * @param array $config
-     * @param \BlueRegister\Log $log
+     * @param null|Log $log
      * @throws \LogicException
      * @throws \InvalidArgumentException
      */
-    public function __construct(array $config, $log)
+    public function __construct(array $config, ?Log $log)
     {
         $this->log = $log;
         $this->config = $config;
@@ -37,7 +40,7 @@ class Event
                 $this->event = $config['event_object'];
                 break;
 
-            case is_string($config['event_object']):
+            case \is_string($config['event_object']):
                 $this->classExists($config['event_object'])
                     ->createObjectFromString($config);
                 break;
@@ -51,28 +54,32 @@ class Event
      * @param array $config
      * @throws \LogicException
      */
-    protected function createObjectFromString(array $config)
+    protected function createObjectFromString(array $config): void
     {
-        $this->event = new $config['event_object']($config['event_config']);
+        $eventObject = new $config['event_object']($config['event_config']);
 
-        if (!$this->event instanceof EventDispatcherInterface) {
-            $message = 'Event should be instance of ' . EventDispatcherInterface::class . ': '
-                . get_class($this->event);
+        if (!$eventObject instanceof EventDispatcherInterface) {
+            $message = 'Event should be instance of '
+                . EventDispatcherInterface::class
+                . ': '
+                . \get_class($eventObject);
             $this->makeLog($message);
             throw new \LogicException($message);
         }
+
+        $this->event = $eventObject;
     }
 
     /**
-     * @param string|object $eventObject
+     * @param object|string $eventObject
      * @throws \LogicException
      */
-    protected function eventObjectException($eventObject)
+    protected function eventObjectException(object|string $eventObject): void
     {
         $object = 'unknown type';
 
-        if (is_object($eventObject)) {
-            $object = get_class($eventObject);
+        if (\is_object($eventObject)) {
+            $object = \get_class($eventObject);
         }
 
         $message = 'Cannot create Event instance: ' . $object;
@@ -87,9 +94,9 @@ class Event
      * @return $this
      * @throws \InvalidArgumentException
      */
-    protected function classExists($namespace)
+    protected function classExists(string $namespace): self
     {
-        if (!class_exists($namespace)) {
+        if (!\class_exists($namespace)) {
             throw new \InvalidArgumentException('Class don\'t exists: ' . $namespace);
         }
 
@@ -97,14 +104,12 @@ class Event
     }
 
     /**
-     * @param string|array $message
+     * @param array|string $message
      * @return $this
      */
-    public function makeLog($message)
+    public function makeLog(array|string $message): self
     {
-        if (!is_null($this->log)) {
-            $this->log->makeLog($message);
-        }
+        $this->log?->makeLog($message);
 
         return $this;
     }
@@ -114,12 +119,10 @@ class Event
      * @param array $data
      * @return $this
      */
-    public function callEvent($name, array $data)
+    public function callEvent(string $name, array $data): self
     {
-        if (!is_null($this->event)) {
-            $this->event->triggerEvent($name, $data + [$this->config]);
-            $this->makeLog('Triggered: ' . $name);
-        }
+        $this->event->triggerEvent($name, $data + [$this->config]);
+        $this->makeLog('Triggered: ' . $name);
 
         return $this;
     }

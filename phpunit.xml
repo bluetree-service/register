@@ -1,22 +1,25 @@
 <?xml version="1.0" encoding="UTF-8" ?>
-<phpunit bootstrap="vendor/autoload.php" colors="true">
+<phpunit bootstrap="vendor/autoload.php" colors="true"
+         displayDetailsOnTestsThatTriggerDeprecations="true"
+         displayDetailsOnTestsThatTriggerErrors="true"
+         displayDetailsOnTestsThatTriggerNotices="true"
+         displayDetailsOnTestsThatTriggerWarnings="true"
+         displayDetailsOnPhpunitDeprecations="true"
+>
     <testsuites>
         <testsuite name="log">
-            <file>test/LogTest.php</file>
+            <file>tests/LogTest.php</file>
         </testsuite>
         <testsuite name="event">
-            <file>test/Events/EventTest.php</file>
+            <file>tests/Events/EventTest.php</file>
         </testsuite>
         <testsuite name="register">
-            <file>test/RegisterTest.php</file>
+            <file>tests/RegisterTest.php</file>
         </testsuite>
     </testsuites>
-    <filter>
-        <whitelist processUncoveredFilesFromWhitelist="true">
+    <source>
+        <include>
             <directory suffix=".php">src</directory>
-        </whitelist>
-        <blacklist>
-            <directory suffix=".php">test/TestClass</directory>
-        </blacklist>
-    </filter>
+        </include>
+    </source>
 </phpunit>

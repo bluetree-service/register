@@ -1,29 +1,31 @@
 <?php
 
+declare(strict_types=1);
+
 namespace BlueRegister;
 
-use \SimpleLog\LogInterface;
+use SimpleLog\LogInterface;
 
 class Log
 {
     /**
      * @var null|LogInterface
      */
-    protected $log;
+    protected ?LogInterface $log = null;
 
     /**
      * @param mixed $logObject
      * @throws \LogicException
      * @throws \InvalidArgumentException
      */
-    public function __construct($logObject)
+    public function __construct(mixed $logObject)
     {
         switch (true) {
             case $logObject instanceof LogInterface:
                 $this->log = $logObject;
                 break;
 
-            case is_string($logObject):
+            case \is_string($logObject):
                 $this->classExists($logObject)
                     ->createObjectFromString($logObject);
                 break;
@@ -37,26 +39,28 @@ class Log
      * @param string $logObject
      * @throws \LogicException
      */
-    protected function createObjectFromString($logObject)
+    protected function createObjectFromString(string $logObject): void
     {
-        $this->log = new $logObject();
+        $logObject = new $logObject();
 
-        if (!$this->log instanceof LogInterface) {
-            $message = 'Log should be instance of SimpleLog\LogInterface: ' . get_class($this->log);
+        if (!$logObject instanceof LogInterface) {
+            $message = 'Log should be instance of SimpleLog\LogInterface: ' . \get_class($logObject);
             throw new \LogicException($message);
         }
+        
+        $this->log = $logObject;
     }
 
     /**
-     * @param object $logObject
+     * @param mixed $logObject
      * @throws \LogicException
      */
-    protected function logObjectException($logObject)
+    protected function logObjectException(mixed $logObject): void
     {
         $object = 'unknown type';
 
-        if (is_object($logObject)) {
-            $object = get_class($logObject);
+        if (\is_object($logObject)) {
+            $object = \get_class($logObject);
         }
 
         throw new \LogicException('Cannot create Log instance: ' . $object);
@@ -69,9 +73,9 @@ class Log
      * @return $this
      * @throws \InvalidArgumentException
      */
-    protected function classExists($namespace)
+    protected function classExists(string $namespace): self
     {
-        if (!class_exists($namespace)) {
+        if (!\class_exists($namespace)) {
             throw new \InvalidArgumentException('Class don\'t exists: ' . $namespace);
         }
 
@@ -79,14 +83,12 @@ class Log
     }
 
     /**
-     * @param string|array $message
+     * @param array|string $message
      * @return $this
      */
-    public function makeLog($message)
+    public function makeLog(array|string $message): self
     {
-        if (!is_null($this->log)) {
-            $this->log->makeLog($message);
-        }
+        $this->log?->makeLog($message);
 
         return $this;
     }

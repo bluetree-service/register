@@ -13,16 +13,9 @@
         }
     ],
     "require": {
-        "php": ">= 7.3",
-        "bluetree-service/simple-log": "v0.9.*",
-        "bluetree-service/event": "v0.9.*"
-    },
-    "require-dev": {
-        "php-coveralls/php-coveralls": "^2.5",
-        "phpunit/phpunit": "^9.5",
-        "symfony/console": "3.4.*",
-        "symfony/filesystem": "3.4.*",
-        "bluetree-service/clover-reporter": "0.1.*"
+        "php": "^8.2",
+        "bluetree-service/event": "^0.10.0",
+        "bluetree-service/simple-log": "^0.10.0"
     },
     "autoload": {
         "psr-4": {
@@ -31,14 +24,24 @@
     },
     "autoload-dev": {
         "classmap": [
-            "test"
+            "tests"
         ]
     },
     "scripts": {
-        "test": "phpunit --coverage-clover build/logs/clover.xml",
-        "test-cover": [
-            "@test",
-            "./vendor/bin/clover_reporter -s --ansi"
+        "test": "./vendor/bin/phpunit --display-warnings",
+        "coverage": "./vendor/bin/phpunit --display-warnings --coverage-clover build/logs/clover.xml",
+        "clover-report": "./vendor/bin/clover_reporter -c build/logs/clover.xml",
+        "clover-full": "./vendor/bin/clover_reporter -f build/logs/clover.xml",
+        "clover-html": "./vendor/bin/clover_reporter -P ./build/report.html -f -H build/logs/clover.xml",
+        "test-complete": [
+            "@coverage",
+            "@clover-html"
         ]
+    },
+    "require-dev": {
+        "bluetree-service/clover-reporter": "^0.3.2",
+        "phpunit/phpunit": "^11.5",
+        "symfony/filesystem": "^7.4",
+        "symfony/console": "^7.4"
     }
 }

@@ -1,10 +1,10 @@
 <?php
 
-namespace Test;
+namespace tests;
 
+use BlueRegister\Log;
 use PHPUnit\Framework\TestCase;
 use SimpleLog\Log as SimpleLog;
-use BlueRegister\Log;
 use Test\TestClass;
 
 class LogTest extends TestCase

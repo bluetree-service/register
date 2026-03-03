@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace BlueRegister\Events;
 
 use BlueEvent\Event\BaseEvent;
@@ -9,22 +11,22 @@ class RegisterException extends BaseEvent
     /**
      * @var bool
      */
-    protected static $allowKill = false;
+    protected static bool $allowKill = false;
 
     /**
      * Set var that allow to kill application if register exception is throwed away
      *
      * @param bool $allowKill
      */
-    public static function allowKill($allowKill)
+    public static function allowKill(bool $allowKill): void
     {
-        self::$allowKill = (bool)$allowKill;
+        self::$allowKill = $allowKill;
     }
 
     /**
      * @return bool
      */
-    public static function isKillingAllowed()
+    public static function isKillingAllowed(): bool
     {
         return self::$allowKill;
     }

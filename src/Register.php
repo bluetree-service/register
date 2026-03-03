@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace BlueRegister;
 
 use BlueRegister\Events\Event;
@@ -11,7 +13,7 @@ class Register
     /**
      * @var array
      */
-    protected $config = [
+    protected array $config = [
         'log' => false,
         'events' => false,
         'log_object' => SimpleLog::class,
@@ -24,43 +26,43 @@ class Register
      *
      * @var array
      */
-    protected $registeredObjects = [];
+    protected array $registeredObjects = [];
 
     /**
      * store list of objects called as singletons
      *
      * @var array
      */
-    protected $singletons = [];
+    protected array $singletons = [];
 
     /**
      * store list of overrides
      *
      * @var array
      */
-    protected $overrides = [];
+    protected array $overrides = [];
 
     /**
      * store information about number of created objects
      *
      * @var array
      */
-    protected $classCounter = [];
+    protected array $classCounter = [];
 
     /**
      * @var bool
      */
-    protected $allowOverride = false;
+    protected bool $allowOverride = false;
 
     /**
-     * @var null|\BlueRegister\Events\Event
+     * @var null|Event
      */
-    protected $event;
+    protected ?Event $event = null;
 
     /**
-     * @var null|\BlueRegister\Log
+     * @var null|Log
      */
-    protected $log;
+    protected ?Log $log = null;
 
     /**
      * Register constructor. Allow to set config on create
@@ -71,7 +73,7 @@ class Register
      */
     public function __construct(array $config = [])
     {
-        $this->config = array_merge($this->config, $config);
+        $this->config = \array_merge($this->config, $config);
 
         if ($this->config['log'] === true) {
             $this->log = new Log($this->config['log_object']);
@@ -91,7 +93,7 @@ class Register
      * @throws \InvalidArgumentException
      * @throws RegisterException
      */
-    public function factory($namespace, array $args = [])
+    public function factory(string $namespace, array $args = []): mixed
     {
         $namespace = $this->checkOverrider($namespace);
 
@@ -101,13 +103,13 @@ class Register
         try {
             $object = new $namespace(...$args);
         } catch (\Exception $exception) {
-            throw new RegisterException($exception);
+            throw new RegisterException($exception->getMessage(), $exception->getCode(), $exception);
         }
 
         $this->callEvent('register_after_create', [$object]);
 
         $this->setClassCounter($namespace);
-        $this->registeredObjects[$namespace] = get_class($object);
+        $this->registeredObjects[$namespace] = \get_class($object);
 
         $this->makeLog([
             'Object created: ' . $namespace . '. With args:',
@@ -122,14 +124,14 @@ class Register
      *
      * @param string $namespace
      * @param array $args
-     * @param null|string $name
+     * @param string|null $name
      * @return mixed
      * @throws \InvalidArgumentException
      * @throws RegisterException
      */
-    public function singletonFactory($namespace, array $args = [], $name = null)
+    public function singletonFactory(string $namespace, array $args = [], ?string $name = null): mixed
     {
-        if (is_null($name)) {
+        if (\is_null($name)) {
             $name = $namespace;
         }
 
@@ -152,7 +154,7 @@ class Register
      * @return string
      * @throws \InvalidArgumentException
      */
-    protected function checkOverrider($namespace)
+    protected function checkOverrider(string $namespace): string
     {
         if ($this->allowOverride && isset($this->overrides[$namespace])) {
             $oldNamespace = $namespace;
@@ -171,12 +173,12 @@ class Register
     /**
      * get all configuration or only specified key
      *
-     * @param null|string $key
-     * @return array|mixed
+     * @param string|null $key
+     * @return mixed
      */
-    public function getConfig($key = null)
+    public function getConfig(?string $key = null): mixed
     {
-        if (is_null($key)) {
+        if (\is_null($key)) {
             return $this->config;
         }
 
@@ -190,7 +192,7 @@ class Register
      * @param mixed $val
      * @return $this
      */
-    public function setConfig($key, $val)
+    public function setConfig(string $key, mixed $val): self
     {
         $this->config[$key] = $val;
         return $this;
@@ -203,9 +205,9 @@ class Register
      * @return $this
      * @throws \InvalidArgumentException
      */
-    protected function classExists($namespace)
+    protected function classExists(string $namespace): self
     {
-        if (!class_exists($namespace)) {
+        if (!\class_exists($namespace)) {
             $this->callEvent('register_class_dont_exists', [$namespace]);
 
             throw new \InvalidArgumentException('Class don\'t exists: ' . $namespace);
@@ -219,24 +221,20 @@ class Register
      * @param array $data
      * @return $this
      */
-    protected function callEvent($name, array $data)
+    protected function callEvent(string $name, array $data): self
     {
-        if (!is_null($this->event)) {
-            $this->event->callEvent($name, $data);
-        }
+        $this->event?->callEvent($name, $data);
 
         return $this;
     }
 
     /**
-     * @param string|array $message
+     * @param array|string $message
      * @return $this
      */
-    protected function makeLog($message)
+    protected function makeLog(array|string $message): self
     {
-        if (!is_null($this->log)) {
-            $this->log->makeLog($message);
-        }
+        $this->log?->makeLog($message);
 
         return $this;
     }
@@ -244,12 +242,12 @@ class Register
     /**
      * destroy called object
      *
-     * @param string $name
+     * @param string|null $name
      * @return $this
      */
-    public function destroySingleton($name = null)
+    public function destroySingleton(?string $name = null): self
     {
-        if (is_null($name)) {
+        if (\is_null($name)) {
             $this->singletons = [];
         }
 
@@ -257,7 +255,7 @@ class Register
             unset($this->singletons[$name]);
         }
 
-        $this->makeLog('Destroy singleton: ' . (is_null($name) ? 'all' : $name));
+        $this->makeLog('Destroy singleton: ' . (\is_null($name) ? 'all' : $name));
 
         return $this;
     }
@@ -270,7 +268,7 @@ class Register
      * @throws \InvalidArgumentException
      * @throws RegisterException
      */
-    public function getSingleton($name)
+    public function getSingleton(string $name): mixed
     {
         return $this->singletonFactory($name);
     }
@@ -280,7 +278,7 @@ class Register
      *
      * @return array
      */
-    public function getRegisteredObjects()
+    public function getRegisteredObjects(): array
     {
         return $this->registeredObjects;
     }
@@ -290,7 +288,7 @@ class Register
      *
      * @return array
      */
-    public function getClassCounter()
+    public function getClassCounter(): array
     {
         return $this->classCounter;
     }
@@ -301,7 +299,7 @@ class Register
      * @param string $class
      * @return Register
      */
-    protected function setClassCounter($class)
+    protected function setClassCounter(string $class): self
     {
         if (!isset($this->classCounter[$class])) {
             $this->classCounter[$class] = 0;
@@ -319,11 +317,11 @@ class Register
      * @param bool $onlyOnce
      * @return $this
      */
-    public function setOverrider($namespace, $overrider, $onlyOnce = false)
+    public function setOverrider(string $namespace, string $overrider, bool $onlyOnce = false): self
     {
         $this->overrides[$namespace] = [
             'overrider' => $overrider,
-            'only_once' => (bool)$onlyOnce,
+            'only_once' => $onlyOnce,
         ];
 
         $this->makeLog(
@@ -341,12 +339,12 @@ class Register
     /**
      * disable given or all overriders
      *
-     * @param null|string $namespace
+     * @param string|null $namespace
      * @return $this
      */
-    public function unsetOverrider($namespace = null)
+    public function unsetOverrider(?string $namespace = null): self
     {
-        if (is_null($namespace)) {
+        if (\is_null($namespace)) {
             $this->overrides = [];
         } else {
             unset($this->overrides[$namespace]);
@@ -362,7 +360,7 @@ class Register
      *
      * @return $this
      */
-    public function enableOverride()
+    public function enableOverride(): self
     {
         $this->allowOverride = true;
         return $this;
@@ -373,7 +371,7 @@ class Register
      *
      * @return $this
      */
-    public function disableOverride()
+    public function disableOverride(): self
     {
         $this->allowOverride = false;
         return $this;
@@ -384,7 +382,7 @@ class Register
      *
      * @return bool
      */
-    public function isOverrideEnable()
+    public function isOverrideEnable(): bool
     {
         return $this->allowOverride;
     }
